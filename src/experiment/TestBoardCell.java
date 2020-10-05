@@ -1,23 +1,26 @@
 package experiment;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
 public class TestBoardCell {
-	private int row, column;
+	private int row, col;
 	
-	public TestBoardCell(int row, int column) {
+	public TestBoardCell() {}
+	public TestBoardCell(int row, int col) {
+		super();
 		this.row = row;
-		this.column = column;
+		this.col = col;
 	}
 	
 	public Set<TestBoardCell> getAdjList() {	
-		return null;
+		Set<TestBoardCell> test = new HashSet<TestBoardCell>();
+		return test;
 	}
 	
 	public void setRoom(boolean check) {
-		
 	}
 	
 	public boolean isRoom() {
@@ -25,7 +28,6 @@ public class TestBoardCell {
 	}
 	
 	public void setOccupied(boolean check) {
-		
 	}
 	
 	public boolean getOccupied() {

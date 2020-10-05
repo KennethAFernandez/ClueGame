@@ -2,7 +2,7 @@ package tests;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import experiment.TestBoard;
@@ -51,7 +51,40 @@ public class BoardTestsExp {
 		Assert.assertTrue(targets.contains(board.getCell(3, 3)));
 	}
 	
-	public BoardTestsExp() {
+	@Test
+	public void topLeftCorner() {
+		TestBoardCell cell = board.getCell(0,0);
+		Set<TestBoardCell> testList = cell.getAdjList();
+		Assert.assertTrue(testList.contains(board.getCell(0, 0)));
+	}
+	
+	@Test 
+	public void bottomRightCorner() {
+		TestBoardCell cell = board.getCell(0,0);
+		Set<TestBoardCell> testList = cell.getAdjList();
+		Assert.assertTrue(testList.contains(board.getCell(3, 3)));
+	}
+	
+	@Test
+	public void rightEdge() {
+		TestBoardCell cell = board.getCell(0,0);
+		Set<TestBoardCell> testList = cell.getAdjList();
+		Assert.assertTrue(testList.contains(board.getCell(1, 3)));
+	}
+	
+	@Test
+	public void leftEdge() {
+		TestBoardCell cell = board.getCell(0,0);
+		Set<TestBoardCell> testList = cell.getAdjList();
+		Assert.assertTrue(testList.contains(board.getCell(1, 0)));
+	}
+	
+	@Test 
+	public void testOccupied() {
+		TestBoardCell cell = board.getCell(0,0);
+		cell.setOccupied(true);
+		Set<TestBoardCell> testList = cell.getAdjList();
+		Assert.assertEquals(true, cell.isRoom());
 	}
 
 }
