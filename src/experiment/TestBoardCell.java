@@ -6,6 +6,7 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public class TestBoardCell {
+	
 	private int row, col;
 	
 	public TestBoardCell() {}

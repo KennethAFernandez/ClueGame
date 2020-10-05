@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TestBoard {
-	@SuppressWarnings("unused")
+	
 	private Map<TestBoardCell, Set<TestBoardCell>> adjMtx;
 	private List<TestBoardCell> visited = new ArrayList<TestBoardCell>();
 	private int path;
@@ -34,7 +34,6 @@ public class TestBoard {
 				adjMtx.remove(cell);
 			}
 		}
-		adjMtx.put(startCell, startCell.getAdjList());
 	}
 	
 	public boolean getPath() {

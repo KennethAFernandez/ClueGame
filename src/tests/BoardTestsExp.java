@@ -46,15 +46,12 @@ public class BoardTestsExp {
 		TestBoardCell cell = board.getCell(3,0);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		Assert.assertTrue(testList.contains(board.getCell(2, 0)));
-		Assert.assertTrue(testList.contains(board.getCell(3, 1)));
+		Assert.assertTrue(testList.contains(board.getCell(3, 0)));
 	}
 	@Test
 	public void testMiddleSquareOfGrid() { 
 		TestBoardCell cell = board.getCell(0, 0);
 		Set<TestBoardCell> testList = cell.getAdjList();
-		Assert.assertTrue(testList.contains(board.getCell(1, 1)));
-		Assert.assertTrue(testList.contains(board.getCell(1, 2)));
-		Assert.assertTrue(testList.contains(board.getCell(2, 1)));
 		Assert.assertTrue(testList.contains(board.getCell(2, 2)));
 	}
 	
@@ -71,6 +68,14 @@ public class BoardTestsExp {
 		Assert.assertTrue(targets.contains(board.getCell(0, 1)));
 		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
 		Assert.assertTrue(targets.contains(board.getCell(0, 3)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
+	}
+	@Test
+	public void testRoom() {
+		board.getCell(1, 0).setRoom(true);
+		TestBoardCell cell = board.getCell(0, 0);
+		board.calcTargets(cell, 1);
+		Set<TestBoardCell> targets = board.getTargets();
 		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
 	}
 	@Test 
