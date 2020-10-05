@@ -1,22 +1,26 @@
 package experiment;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class TestBoard {
-
+	@SuppressWarnings("unused")
+	private Map<TestBoardCell, Set<TestBoardCell>> adjMtx;
+	
 	public TestBoard() {
-		// Sets up the board
+		adjMtx = new HashMap<TestBoardCell, Set<TestBoardCell>>();
 	}
 	
 	public void calcTargets(TestBoardCell startCell, int path) {
 		
 	}
 	
-	Set<TestBoardCell> getTargets(){
+	public Set<TestBoardCell> getTargets(){ // Returns adj list
 		return null;
 	}
 
-	TestBoardCell getCell(int row, int col) {
+	public TestBoardCell getCell(int row, int col) {
 		return null;	
 	}
 }
