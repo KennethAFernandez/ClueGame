@@ -1,3 +1,4 @@
+// Authors: Kenneth Fernandez and Asher Rubin
 package experiment;
 
 import java.util.HashSet;
@@ -10,13 +11,13 @@ public class TestBoardCell {
 	private int row, col;
 	
 	public TestBoardCell() {}
-	public TestBoardCell(int row, int col) {
+	public TestBoardCell(int row, int col) { // constructor
 		super();
 		this.row = row;
 		this.col = col;
 	}
 	
-	public Set<TestBoardCell> getAdjList() {	
+	public Set<TestBoardCell> getAdjList() {	// test
 		Set<TestBoardCell> test = new HashSet<TestBoardCell>();
 		return test;
 	}
