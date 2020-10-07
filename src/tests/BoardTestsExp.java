@@ -97,12 +97,8 @@ public class BoardTestsExp {
 		Assert.assertTrue(targets.contains(board.getCell(2, 2)));
 		Assert.assertTrue(targets.contains(board.getCell(3, 3)));
 	}
-	@Test
-	public void noMoreThanSix() { // tests that there is not a path of more than 6
-		TestBoardCell cell = board.getCell(0, 3);
-		board.calcTargets(cell, 7);
-		Assert.assertEquals(true, board.getPath()); // uses user creted method that returns true if path <= 6
-	}
+
+
 	@Test
 	public void multipleSteps() {  // tests multiple steps (2)
 		TestBoardCell cell = board.getCell(0, 0);
