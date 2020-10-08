@@ -18,7 +18,6 @@ public class TestBoard {
 	private Set<TestBoardCell> targets;
 	private Set<TestBoardCell> visited;
 	private TestBoardCell[][] grid;
-	private boolean hasVisitedStartingCell = false;
 	
 
 	// Constants to intialize board size
@@ -34,7 +33,7 @@ public class TestBoard {
 				grid[i][j] = new TestBoardCell(i,j);
 			}
 		}
-
+		// Checks adjacencies of all grid spots
 		for(int i=0; i<ROWS; i++) {
 			for(int j=0; j<COLS; j++) {
 				adjacencies(i, j);
@@ -81,26 +80,13 @@ public class TestBoard {
 		for(TestBoardCell cell : startCell.getAdjList()) {
 			if(!visited.contains(cell)) {
 				visited.add(cell);
-				if(path == 1) {
+				if(path == 1 || cell.isRoom() == true) {
 					targets.add(cell);
 				} else {
 					findTargets(cell, path -1);
 				}
 				visited.remove(cell);
-			} else {
-				continue;
-			}
-//			if(visited.contains(cell)) {
-//				break;
-//			} else {	
-//				visited.add(cell);
-//				if(path == 1) {
-//					targets.add(cell);
-//				} else {
-//					findTargets(cell, path - 1);
-//				}
-//			}
-//			visited.remove(cell);
+			} 
 		}
 	}
 
