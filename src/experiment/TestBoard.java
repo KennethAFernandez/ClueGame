@@ -69,7 +69,6 @@ public class TestBoard {
 	// Calculates legal targets for a move from startCell to length path
 	public void calcTargets(TestBoardCell startCell, int path) { 
 		targets = new HashSet<TestBoardCell>();
-		
 		for(TestBoardCell cell : startCell.getAdjList()) {
 			if(!visited.contains(cell)) {
 				visited.add(cell);
@@ -77,7 +76,8 @@ public class TestBoard {
 					targets.add(cell);
 				} else {
 					calcTargets(cell, path - 1);
-				} 
+				}
+				visited.remove(cell);
 			}  else {
 				break;
 			}
@@ -97,26 +97,4 @@ public class TestBoard {
 	}
 }
 
-//		for(int i = 0; i < ROWS; i++) {
-//		for(int j = 0; j < COLS; j++) {
-//			TestBoardCell cell = grid[i][j];
-//			if(validate(i + 1, j)) {
-//				cell = new TestBoardCell(i + 1, j);
-//				cell.adjList.add(cell);				
-//			}
-//			if(validate(i - 1, j)) {
-//				cell = new TestBoardCell(i - 1, j);
-//				cell.adjList.add(cell);
-//			}
-//			if(validate(i, j + 1)) {
-//				cell = new TestBoardCell(i, j + 1);
-//				cell.adjList.add(cell);
-//			}
-//			if(validate(i, j - 1)) {
-//				cell = new TestBoardCell(i, j - 1);
-//				cell.adjList.add(cell);
-//			}
-//		}
-//	}
-//}
 
