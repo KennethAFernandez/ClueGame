@@ -25,13 +25,13 @@ public class BoardTestsExp {
 	}
 	@Test
 	public void topLeftCorner() {  // test top left corner [0,0]
-		TestBoardCell cell = board.getCell(0,0); // creates cell
-		Set<TestBoardCell> testList = cell.getAdjList(); // adds adj list to testlist
-		Assert.assertTrue(testList.contains(board.getCell(0, 0))); // checks to see if it contains
+		TestBoardCell cell = board.getCell(1,0); 
+		Set<TestBoardCell> testList = cell.getAdjList();
+		Assert.assertTrue(testList.contains(board.getCell(0, 0))); 
 	}
 	@Test 
 	public void bottomRightCorner() { // checks bottom right corner 
-		TestBoardCell cell = board.getCell(0,0);
+		TestBoardCell cell = board.getCell(3,2);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		Assert.assertTrue(testList.contains(board.getCell(3, 3)));
 	}
@@ -44,14 +44,13 @@ public class BoardTestsExp {
 	}
 	@Test
 	public void leftEdge() { //checks left edge [3,0]
-		TestBoardCell cell = board.getCell(3,0);
+		TestBoardCell cell = board.getCell(2,0);
 		Set<TestBoardCell> testList = cell.getAdjList();
-		Assert.assertTrue(testList.contains(board.getCell(2, 0)));
 		Assert.assertTrue(testList.contains(board.getCell(3, 0)));
 	}
 	@Test
 	public void testMiddleSquareOfGrid() { // tests middle of grid [2,2]
-		TestBoardCell cell = board.getCell(0, 0);
+		TestBoardCell cell = board.getCell(2, 1);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		Assert.assertTrue(testList.contains(board.getCell(2, 2)));
 	}

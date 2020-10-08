@@ -1,6 +1,7 @@
 // Authors: Kenneth Fernandez and Asher Rubin
 package experiment;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -8,23 +9,31 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class TestBoardCell {
 	
+	
 	// Constants and booleans
 	private int row;
 	private int col;
 	private boolean isRoom, isOccupied;
 	
+	 
 	// Set to store each adjList for each cell
 	Set<TestBoardCell> adjList;
 	
-	public TestBoardCell() {}
 	
+
 	
 	// Constructor passing row and col
 	public TestBoardCell(int row, int col) {
 		super();
-		this.adjList = new HashSet<TestBoardCell>();
 		this.row = row;
 		this.col = col;
+		adjList = new HashSet<TestBoardCell>();
+
+	}
+	
+	public void addAdj(TestBoardCell cell) {
+		adjList.add(cell);
+
 	}
 	
 	
@@ -56,5 +65,6 @@ public class TestBoardCell {
 	public boolean getOccupied() {
 		return isOccupied;
 	}
+
 
 }
