@@ -71,6 +71,27 @@ public class BoardTestsExp {
 		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
 	}
 	@Test
+	public void randomTest() {
+		TestBoardCell cell = board.getCell(1, 1);
+		board.calcTargets(cell, 1);
+		Set<TestBoardCell> targets = board.getTargets();
+		Assert.assertTrue(targets.contains(board.getCell(1, 0)));
+		Assert.assertTrue(targets.contains(board.getCell(0, 1)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 1)));
+	}
+	@Test
+	public void testTargetsMixed() { // given code to test occipied and room
+		board.getCell(0, 2).setOccupied(true);
+		board.getCell(1, 2).setRoom(true);
+		TestBoardCell cell = board.getCell(0, 3);
+		board.calcTargets(cell, 3);
+		Set<TestBoardCell> targets = board.getTargets();
+		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(2, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(3, 3)));
+	}
+	@Test
 	public void testRoom() { // tests room application
 		board.getCell(1, 0).setRoom(true); // sets the room
 		TestBoardCell cell = board.getCell(0, 0); // gets the cell
@@ -85,19 +106,6 @@ public class BoardTestsExp {
 		board.calcTargets(cell, 1);
 		Assert.assertEquals(true, board.getCell(0, 1).getOccupied()); // checks if room is considered occupied
 	}
-	@Test
-	public void testTargetsMixed() { // given code to test occipied and room
-		board.getCell(0, 2).setOccupied(true);
-		board.getCell(1, 2).setRoom(true);
-		TestBoardCell cell = board.getCell(0, 3);
-		board.calcTargets(cell, 3);
-		Set<TestBoardCell> targets = board.getTargets();
-		Assert.assertTrue(targets.contains(board.getCell(1, 2)));
-		Assert.assertTrue(targets.contains(board.getCell(2, 2)));
-		Assert.assertTrue(targets.contains(board.getCell(3, 3)));
-	}
-
-
 	@Test
 	public void multipleSteps() {  // tests multiple steps (2)
 		TestBoardCell cell = board.getCell(0, 0);

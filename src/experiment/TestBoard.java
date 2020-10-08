@@ -4,6 +4,7 @@ package experiment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,7 +67,7 @@ public class TestBoard {
 	}
 
 
-	// Calculates legal targets for a move from startCell to length path
+	// Calculates legal targets for a move from startCell to length path, visited, targets, startloc, recursion
 	public void calcTargets(TestBoardCell startCell, int path) {
 		targets = new HashSet<TestBoardCell>();
 		visited = new HashSet<TestBoardCell>();
@@ -75,23 +76,31 @@ public class TestBoard {
 	}
 
 	
+	// Recursively solve all possible paths
 	public void findTargets(TestBoardCell startCell, int path) {
-		if(!hasVisitedStartingCell) {
-			visited.add(startCell);
-			hasVisitedStartingCell = true;
-		}
 		for(TestBoardCell cell : startCell.getAdjList()) {
-			if(visited.contains(cell)) {
-				break;
-			} else {
+			if(!visited.contains(cell)) {
 				visited.add(cell);
 				if(path == 1) {
 					targets.add(cell);
 				} else {
-					findTargets(cell, path - 1);
+					findTargets(cell, path -1);
 				}
 				visited.remove(cell);
+			} else {
+				continue;
 			}
+//			if(visited.contains(cell)) {
+//				break;
+//			} else {	
+//				visited.add(cell);
+//				if(path == 1) {
+//					targets.add(cell);
+//				} else {
+//					findTargets(cell, path - 1);
+//				}
+//			}
+//			visited.remove(cell);
 		}
 	}
 
