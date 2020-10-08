@@ -17,7 +17,8 @@ public class TestBoard {
 	private Set<TestBoardCell> targets;
 	private Set<TestBoardCell> visited;
 	private TestBoardCell[][] grid;
-
+	private boolean hasVisitedStartingCell = false;
+	
 
 	// Constants to intialize board size
 	final static int COLS = 4;
@@ -26,7 +27,6 @@ public class TestBoard {
 
 	// Constructor that sets up the board
 	public TestBoard() {
-		visited = new HashSet<TestBoardCell>();
 		grid = new TestBoardCell[ROWS][COLS];
 		for(int i = 0; i < ROWS; i++) {
 			for(int j=0; j < COLS; j++) {
@@ -67,19 +67,30 @@ public class TestBoard {
 
 
 	// Calculates legal targets for a move from startCell to length path
-	public void calcTargets(TestBoardCell startCell, int path) { 
+	public void calcTargets(TestBoardCell startCell, int path) {
 		targets = new HashSet<TestBoardCell>();
+		visited = new HashSet<TestBoardCell>();
+		visited.add(startCell);
+		findTargets(startCell, path);
+	}
+
+	
+	public void findTargets(TestBoardCell startCell, int path) {
+		if(!hasVisitedStartingCell) {
+			visited.add(startCell);
+			hasVisitedStartingCell = true;
+		}
 		for(TestBoardCell cell : startCell.getAdjList()) {
-			if(!visited.contains(cell)) {
+			if(visited.contains(cell)) {
+				break;
+			} else {
 				visited.add(cell);
 				if(path == 1) {
 					targets.add(cell);
 				} else {
-					calcTargets(cell, path - 1);
+					findTargets(cell, path - 1);
 				}
 				visited.remove(cell);
-			}  else {
-				break;
 			}
 		}
 	}

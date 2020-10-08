@@ -104,7 +104,7 @@ public class BoardTestsExp {
 		board.calcTargets(cell, 2);
 		Set<TestBoardCell> targets = board.getTargets(); // just checks that all moves are in the set
 		Assert.assertTrue(targets.contains(board.getCell(0, 2)));
+		Assert.assertTrue(targets.contains(board.getCell(1, 1)));
 		Assert.assertTrue(targets.contains(board.getCell(2, 0)));
-		Assert.assertTrue(targets.contains(board.getCell(1, 1)));	
 	}
 }
