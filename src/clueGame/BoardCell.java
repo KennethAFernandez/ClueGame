@@ -19,8 +19,8 @@ public class BoardCell {
 	public BoardCell() {
 	}
 
-	public Object[] getDoorDirection() {
-		return null;
+	public DoorDirection getDoorDirection() { // i don't know
+		return doorDirection;
 	}
 
 	public boolean isDoorway() {
@@ -37,10 +37,6 @@ public class BoardCell {
 
 	public char getSecretPassage() {
 		return secretPassage;
-	}
-
-	public Object getName() {
-		return null;
 	}
 	
 	public char getInitial() {

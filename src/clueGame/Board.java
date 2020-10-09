@@ -42,14 +42,11 @@ public class Board {
 		
 	}
 	
-	public Object getRoom(char c) {
+	public Room getRoom(char c) {
 		return roomMap.get(c);
 	}
 	
-	public Object getName() {
-		return null;
-	}
-	
+
 	public int getNumRows() {
 		return 0;
 	}
@@ -64,7 +61,7 @@ public class Board {
 	}
 	
 	public Room getRoom(BoardCell cell) {
-		return null;
+		return getRoom(cell.getInitial());
 	}
 	
 	public int getAmountRooms() {

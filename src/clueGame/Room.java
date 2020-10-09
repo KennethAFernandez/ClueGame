@@ -14,7 +14,7 @@ public class Room {
 	}
 	
 	public BoardCell getLabelCell() {
-		return null;
+		return labelCell;
 	}
 
 	public String getName() {
@@ -22,7 +22,7 @@ public class Room {
 	}
 
 	public BoardCell getCenterCell() {
-		return null;
+		return centerCell;
 	}
 
 }
