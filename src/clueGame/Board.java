@@ -6,7 +6,8 @@ import java.util.Map;
 // Holds game board
 @SuppressWarnings("unused")
 public class Board {
-
+	
+	private BoardCell[][] grid;
 	private int numRows;
 	private int numCols;
 	private String layoutConfigFile;
