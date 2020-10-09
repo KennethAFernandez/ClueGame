@@ -19,7 +19,7 @@ public class BoardCell {
 	public BoardCell() {
 	}
 
-	public DoorDirection getDoorDirection() { // i don't know
+	public DoorDirection getDoorDirection() {
 		return doorDirection;
 	}
 

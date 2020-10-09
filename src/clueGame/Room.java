@@ -17,8 +17,8 @@ public class Room {
 		return labelCell;
 	}
 
-	public String getName() {
-		return name;
+	public BoardCell getName() {
+		return labelCell;
 	}
 
 	public BoardCell getCenterCell() {

@@ -7,6 +7,8 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class Board {
 
+	
+	private BoardCell[][] grid;
 	private int numRows;
 	private int numCols;
 	private String layoutConfigFile;
@@ -43,7 +45,8 @@ public class Board {
 	}
 	
 	public Room getRoom(char c) {
-		return roomMap.get(c);
+		Room room = new Room();
+		return room;
 	}
 	
 
