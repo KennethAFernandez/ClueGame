@@ -1,9 +1,17 @@
 package clueGame;
 
+import java.util.HashMap;
+import java.util.Map;
 
 // Holds game board
+@SuppressWarnings("unused")
 public class Board {
 
+	private int numRows;
+	private int numCols;
+	private String layoutConfigFile;
+	private String setupConfigFile;
+	Map<Character, Room> roomMap = new HashMap<Character, Room>();
 	
 	 // variable and methods used for singleton pattern
 	private static Board theInstance = new Board();
@@ -35,7 +43,7 @@ public class Board {
 	}
 	
 	public Object getRoom(char c) {
-		return null;
+		return roomMap.get(c);
 	}
 	
 	public Object getName() {

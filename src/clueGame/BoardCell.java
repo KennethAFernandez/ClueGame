@@ -1,10 +1,21 @@
 package clueGame;
 
+import java.util.Set;
 
 // Information on a specific cell
+@SuppressWarnings("unused")
 public class BoardCell {
 
-	private String name;
+	
+	private int row, col;
+	private char initial;
+	DoorDirection doorDirection;
+	private boolean roomLabel;
+	private boolean roomCenter;
+	private char secretPassage;
+	Set<BoardCell> adjList;
+	
+	
 	public BoardCell() {
 	}
 
@@ -25,11 +36,14 @@ public class BoardCell {
 	}
 
 	public char getSecretPassage() {
-		return 0;
+		return secretPassage;
 	}
 
 	public Object getName() {
-		return name;
+		return null;
 	}
-
+	
+	public char getInitial() {
+		return initial;
+	}
 }
