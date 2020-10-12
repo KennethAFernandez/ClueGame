@@ -34,5 +34,9 @@ public class Room {
 	public void setLabel(BoardCell cell) {
 		labelCell = cell;
 	}
+	
+	public void setCenter(BoardCell cell) {
+		centerCell = cell;
+	}
 
 }

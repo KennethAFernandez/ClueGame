@@ -51,10 +51,10 @@ public class Board {
 		this.layoutConfigFile = "data/"+string;
 		this.setupConfigFile = "data/"+string2;
 	}
-	
+
 	@SuppressWarnings("resource")
 	public void setConfigValues() throws FileNotFoundException, BadConfigFormatException {
-		
+
 		FileReader reader = new FileReader(layoutConfigFile);
 		Scanner scanner = new Scanner(reader);
 		String currLine;
@@ -63,27 +63,27 @@ public class Board {
 		int cols = 0;
 		int rows = 0;
 		boolean firstIter = true;
-		
+
 		while(scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split("[\\,\\s]+");
 			cols = values.length;
 			rows++;
 		}
-			
+
 		numRows = rows;
 		numCols = cols;
 		grid = new BoardCell[numRows][numCols];
-		
+
 		for(int i=0; i<numRows; i++) {
 			for(int j=0; j<numCols; j++) {
 				grid[i][j] = new BoardCell(i, j);
 			}
 		}
-		
-			
+
+
 	}
-	
+
 	@SuppressWarnings("resource")
 	public void loadSetupConfig() throws BadConfigFormatException, FileNotFoundException {
 		roomMap = new HashMap<Character, Room>();
@@ -99,7 +99,7 @@ public class Board {
 			if(values[0].equals("//")) {
 				continue;
 			}
-			
+
 			if(values[0].equals("Room") || values[0].equals("Space")) {
 				key = values[2].charAt(0);
 				if(!(Character.isLetter(key))) {
@@ -124,8 +124,12 @@ public class Board {
 			cols = values.length;
 			for(int i = 0; i < cols; ++i) {
 				grid[rows][i] = getCell(rows, i);
-				grid[rows][i].setInitital(values[i].charAt(0));
-				
+                char location = values[i].charAt(0);
+                grid[rows][i].setInitital(location);
+                if(roomMap.containsKey(location)) {
+                    grid[rows][i].setInitital(location);
+                    grid[rows][i].setRoom(true);
+                }
 				if(values[i].length() == 2) {
 					char tmp = values[i].charAt(1);
 					switch (tmp) {
@@ -147,9 +151,11 @@ public class Board {
 						continue;
 					case '#':
 						grid[rows][i].setLabel();
+						roomMap.get(location).setLabel(grid[rows][i]);
 						continue;
 					case '*':
-						grid[rows][i].setCenter();
+						 grid[rows][i].setCenter();
+	                     roomMap.get(location).setCenter(grid[rows][i]);
 						continue;
 					case 'K':
 						grid[rows][i].setSecretPassage(tmp);
@@ -162,7 +168,7 @@ public class Board {
 			}
 			rows++;
 		}
-		
+
 	}
 
 

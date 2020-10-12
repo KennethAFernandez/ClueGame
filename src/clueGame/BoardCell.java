@@ -19,7 +19,6 @@ public class BoardCell {
 	private char secretPassage;
 	Set<BoardCell> adjList;
 	DoorDirection doorDirection;
-	Room room;
 	
 	
 	public BoardCell(int row, int col) {
@@ -27,7 +26,6 @@ public class BoardCell {
 		this.col = col;
 		adjList = new HashSet<BoardCell>();
 	}
-	
 	
 	public void addAdj(BoardCell cell) {
 		adjList.add(cell);
