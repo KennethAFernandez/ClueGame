@@ -6,19 +6,22 @@ public class Room {
 
 	
 	private String name;
+	private int row, col;
 	BoardCell centerCell;
 	BoardCell labelCell;
 	
+	public Room() {}
 	
-	public Room() {
+	public Room(String name) {
+		this.name = name;
 	}
 	
 	public BoardCell getLabelCell() {
 		return labelCell;
 	}
 
-	public BoardCell getName() {
-		return labelCell;
+	public String getName() {
+		return name;
 	}
 
 	public BoardCell getCenterCell() {
