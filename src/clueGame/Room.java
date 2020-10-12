@@ -7,6 +7,8 @@ public class Room {
 	
 	private String name;
 	private int row, col;
+	private boolean label;
+	private boolean center;
 	BoardCell centerCell;
 	BoardCell labelCell;
 	
@@ -26,6 +28,11 @@ public class Room {
 
 	public BoardCell getCenterCell() {
 		return centerCell;
+	}
+
+	
+	public void setLabel(BoardCell cell) {
+		labelCell = cell;
 	}
 
 }

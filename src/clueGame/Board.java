@@ -75,11 +75,12 @@ public class Board {
 		numCols = cols;
 		grid = new BoardCell[numRows][numCols];
 		
-		for(int i = 0; i < numRows; i++) {
-			for(int j = 0; j < numCols; j++) {
+		for(int i=0; i<numRows; i++) {
+			for(int j=0; j<numCols; j++) {
 				grid[i][j] = new BoardCell(i, j);
 			}
 		}
+		
 			
 	}
 	
@@ -94,14 +95,14 @@ public class Board {
 
 		while(scanner.hasNext()) {
 			currLine = scanner.nextLine();
-			values = currLine.split("[\\,\\s]+");
-			if(values[0] == "//" || values[0] == "space") {
+			values = currLine.split(", ");
+			if(values[0].equals("//")) {
 				continue;
 			}
 			
-			if(values[0] == "Room") {
+			if(values[0].equals("Room") || values[0].equals("Space")) {
 				key = values[2].charAt(0);
-				if(!Character.isLetter(key)) {
+				if(!(Character.isLetter(key))) {
 					throw new BadConfigFormatException("Bad format (KEY) " + setupConfigFile);
 				} 
 				Room room = new Room(values[1]);
@@ -109,8 +110,59 @@ public class Board {
 			}
 		}
 	}
+	@SuppressWarnings("resource")
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException{
-
+		FileReader reader = new FileReader(layoutConfigFile);
+		Scanner scanner = new Scanner(reader);
+		String currLine;
+		String[] values;
+		int cols = 0; 
+		int rows = 0;
+		while(scanner.hasNext()) {
+			currLine = scanner.nextLine();
+			values = currLine.split(",");
+			cols = values.length;
+			for(int i = 0; i < cols; ++i) {
+				grid[rows][i] = getCell(rows, i);
+				grid[rows][i].setInitital(values[i].charAt(0));
+				
+				if(values[i].length() == 2) {
+					char tmp = values[i].charAt(1);
+					switch (tmp) {
+					case '>':
+						grid[rows][i].setDoor();
+						grid[rows][i].setDoorDirection(DoorDirection.RIGHT);
+						continue;
+					case '<':
+						grid[rows][i].setDoor();
+						grid[rows][i].setDoorDirection(DoorDirection.LEFT);
+						continue;
+					case '^':
+						grid[rows][i].setDoor();
+						grid[rows][i].setDoorDirection(DoorDirection.UP);
+						continue;
+					case 'v':
+						grid[rows][i].setDoor();
+						grid[rows][i].setDoorDirection(DoorDirection.DOWN);
+						continue;
+					case '#':
+						grid[rows][i].setLabel();
+						continue;
+					case '*':
+						grid[rows][i].setCenter();
+						continue;
+					case 'K':
+						grid[rows][i].setSecretPassage(tmp);
+						continue;
+					default:
+						grid[rows][i].isWalkway();
+						continue;
+					}
+				}
+			}
+			rows++;
+		}
+		
 	}
 
 
