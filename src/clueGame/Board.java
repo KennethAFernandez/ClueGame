@@ -122,6 +122,9 @@ public class Board {
 			currLine = scanner.nextLine();
 			values = currLine.split(",");
 			cols = values.length;
+			if(numCols!= cols) {
+				throw new BadConfigFormatException("Error with config files");
+			}
 			for(int i = 0; i < cols; ++i) {
 				grid[rows][i] = getCell(rows, i);
                 char location = values[i].charAt(0);
