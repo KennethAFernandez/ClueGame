@@ -33,6 +33,9 @@ public class BoardCell {
 	public Set<BoardCell> getAdjList(){
 		return adjList;
 	}
+	public Set<BoardCell> getAdjList(int row, int col){
+		return adjList;
+	}
 	public char getInitial() {
 		return initial;
 	}

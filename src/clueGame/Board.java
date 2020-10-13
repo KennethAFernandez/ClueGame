@@ -78,10 +78,9 @@ public class Board {
 		for(int i=0; i<numRows; i++) {
 			for(int j=0; j<numCols; j++) {
 				grid[i][j] = new BoardCell(i, j);
+				
 			}
 		}
-
-
 	}
 
 	@SuppressWarnings("resource")
@@ -171,6 +170,11 @@ public class Board {
 			}
 			rows++;
 		}
+		for(int i=0; i<numRows; i++) {
+			for(int j=0; j<numCols; j++) {
+				adjacencies(i, j);
+			}
+		}
 
 	}
 
@@ -191,7 +195,7 @@ public class Board {
 		}
 	}
 	public boolean validate(int row, int col) {
-		return row >= 0 && row < numRows && col >= 0 && col < numCols;
+		return (row >= 0 && row < numRows && col >= 0 && col < numCols);
 	}
 
 
@@ -218,7 +222,6 @@ public class Board {
 		return targets;
 	}
 
-
 	public Room getRoom(char c) {
 		return roomMap.get(c);
 	}
@@ -239,6 +242,9 @@ public class Board {
 	}
 	public int getAmountDoors(){
 		return numDoors;
+	}
+	public Set<BoardCell> getAdjList(int i, int j) {
+		return getCell(i, j).getAdjList();
 	}
 
 }
