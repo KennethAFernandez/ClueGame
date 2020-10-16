@@ -33,39 +33,39 @@ public class FileInitTest {
 	// Test number of rooms
 	@Test
 	public void testNumRooms() {
-		Assert.assertEquals(9, board.getAmountRooms());
+		Assert.assertEquals(11, board.getAmountRooms());
 	}
 	
 	
 	// Test number of rows
 	@Test
 	public void testRows(){
-		Assert.assertEquals(25, board.getNumRows());
+		Assert.assertEquals(24, board.getNumRows());
 	}
 	
 	
 	// Test number of cols
 	@Test
 	public void testCols() {
-		Assert.assertEquals(24, board.getNumColumns());
+		Assert.assertEquals(25, board.getNumColumns());
 	}
 
 	
 	// Verify at least one direction of each, verify cells w/o door is false
 	@Test
 	public void testDirectionsDoors() {
-		BoardCell cell = board.getCell(4, 5);
-		assertTrue(cell.isDoorway());
-		assertEquals(DoorDirection.LEFT, cell.getDoorDirection());
-		cell = board.getCell(7, 5);
+		BoardCell cell = board.getCell(5, 4);
 		assertTrue(cell.isDoorway());
 		assertEquals(DoorDirection.UP, cell.getDoorDirection());
-		cell = board.getCell(13, 5);
+		cell = board.getCell(5,7);
 		assertTrue(cell.isDoorway());
-		assertEquals(DoorDirection.RIGHT, cell.getDoorDirection());
-		cell = board.getCell(7, 17);
+		assertEquals(DoorDirection.UP, cell.getDoorDirection());
+		cell = board.getCell(5,13);
 		assertTrue(cell.isDoorway());
-		assertEquals(DoorDirection.DOWN, cell.getDoorDirection());
+		assertEquals(DoorDirection.UP, cell.getDoorDirection());
+		cell = board.getCell(17,7);
+		assertTrue(cell.isDoorway());
+		assertEquals(DoorDirection.LEFT, cell.getDoorDirection());
 		
 		cell = board.getCell(0, 0);
 		assertFalse(cell.isDoorway());
@@ -102,15 +102,15 @@ public class FileInitTest {
 	// Check that rooms have the proper cetner cell and label cell
 	@Test
 	public void testCenterAndLabel() {
-		Assert.assertEquals("Main Hall", board.getRoom('M'));
-		Assert.assertEquals("Cooking Room", board.getRoom('K'));
-		Assert.assertEquals("Relaxing Room", board.getRoom('R'));
-		Assert.assertEquals("Ping Pong Room", board.getRoom('P'));
-		Assert.assertEquals("Library", board.getRoom('M'));
-		Assert.assertEquals("Dining Room", board.getRoom('D'));
-		Assert.assertEquals("TV Room", board.getRoom('T'));
-		Assert.assertEquals("School", board.getRoom('S'));
-		Assert.assertEquals("Closet", board.getRoom('C'));
+		Assert.assertEquals("Main Hall", board.getRoom('M').getName());
+		Assert.assertEquals("Cooking Room", board.getRoom('K').getName());
+		Assert.assertEquals("Relaxing Room", board.getRoom('R').getName());
+		Assert.assertEquals("Ping Pong Room", board.getRoom('P').getName());
+		Assert.assertEquals("Library", board.getRoom('L').getName());
+		Assert.assertEquals("Dining Room", board.getRoom('D').getName());
+		Assert.assertEquals("TV Room", board.getRoom('T').getName());
+		Assert.assertEquals("School", board.getRoom('S').getName());
+		Assert.assertEquals("Closet", board.getRoom('C').getName());
 
 	}
 }
