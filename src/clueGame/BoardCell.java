@@ -15,6 +15,8 @@ public class BoardCell {
 	private boolean isRoom;
 	private boolean isDoorway;
 	private boolean isOccupied;
+	private boolean isUnused;
+	private boolean isPassage;
 	private boolean walkway;
 	private char secretPassage;
 	Set<BoardCell> adjList;
@@ -26,10 +28,11 @@ public class BoardCell {
 		this.col = col;
 		adjList = new HashSet<BoardCell>();
 	}
-	
+	// addsd to cells adjList
 	public void addAdj(BoardCell cell) {
 		adjList.add(cell);
 	}
+	//getters for adjlist, initial, if occupied, dd, and secretpassage
 	public Set<BoardCell> getAdjList(){
 		return adjList;
 	}
@@ -52,6 +55,7 @@ public class BoardCell {
 	
 	
 	
+	//setters for occupied, dd, label, center, secret passage
 	public void setOccupied(boolean check) {
 		this.isOccupied = check;
 	}
@@ -65,10 +69,11 @@ public class BoardCell {
 		this.roomLabel = true;
 		
 	}
+	public void setWalkway() {
+		this.walkway = true;
+	}
 	public void setCenter() {
 		this.roomCenter = true;
-		
-		
 	}
 	public void setDoor() {
 		this.isDoorway = true;
@@ -78,10 +83,13 @@ public class BoardCell {
 	}
 	public void setSecretPassage(char pass) {
 		this.secretPassage = pass;
+		this.isPassage = true;
 	}
-	
-	
-	
+	public void setUnused() {
+		isUnused = false;
+	}
+
+	// returns a boolean to help with formatting and movement
 	public boolean isRoom() {
 		return isRoom;
 	}
@@ -102,6 +110,12 @@ public class BoardCell {
 	}
 	public boolean isWalkway() {
 		return walkway;
+	}
+	public boolean isPassage() {
+		return isPassage;
+	}
+	public boolean isCellUnused() {
+		return isUnused;
 	}
 
 	
