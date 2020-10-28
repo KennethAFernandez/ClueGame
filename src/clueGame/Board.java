@@ -139,10 +139,8 @@ public class Board {
 			if (!visited.contains(cell)) {
 				if(cell.isOccupied() && !cell.isRoom()) {continue;}
 				visited.add(cell);
-				if (path == 1 || cell.isRoom() == true) {
-					if(cell.isOccupied() == false || cell.isRoom()) {						
-						targets.add(cell);
-					}
+				if ((path == 1 || cell.isRoom() == true) && (cell.isOccupied() == false || cell.isRoom())) {
+					targets.add(cell);
 				} else {
 					findTargets(cell, path - 1);
 				}
@@ -151,45 +149,6 @@ public class Board {
 		}
 	}
 
-	// returns set of targets
-	public Set<BoardCell> getTargets() {
-		return targets;
-	}
-	
-	// returns room based on key from room map
-	public Room getRoom(char c) {
-		return roomMap.get(c);
-	}
-
-	// returns BoardCell from grid array
-	public BoardCell getCell(int i, int j) {
-		return grid[i][j];
-	}
-
-	// returns room from the room map
-	public Room getRoom(BoardCell cell) {
-		return getRoom(cell.getInitial());
-	}
-
-	// returns the number of columns
-	public int getNumColumns() {
-		return numCols;
-	}
-
-	// returns the number of rows
-	public int getNumRows() {
-		return numRows;
-	}
-
-	// returns the amount of rooms
-	public int getAmountRooms() {
-		return roomMap.size();
-	}
-
-	// returns a adjacency list for any given cell
-	public Set<BoardCell> getAdjList(int i, int j) {
-		return getCell(i, j).getAdjList();
-	}
 
 	// sets the file names with proper path "data"
 	public void setConfigFiles(String string, String string2) {
@@ -245,17 +204,17 @@ public class Board {
 		while (scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split(", ");
-			if (values[0].equals("//")) {
-				continue;
-			}
-			// adding key and value to room map
-			if (values[0].equals("Room") || values[0].equals("Space")) {
+			String name = values[0];
+					
+			if (name.equals("Room") || name.equals("Space")) {
 				key = values[2].charAt(0);
 				if (!(Character.isLetter(key))) {
 					throw new BadConfigFormatException("Bad format: Inappropriate value for room initial in legend " + setupConfigFile);
 				}
 				Room room = new Room(values[1]);
 				roomMap.put(key, room);
+			} else {
+				continue;
 			}
 		}
 	}
@@ -283,23 +242,26 @@ public class Board {
 			if(numCols!= cols) {
 				throw new BadConfigFormatException("Bad Format: Number of columns is not consitent through out");
 			}
+			
 			for(int i = 0; i < cols; ++i) {
 				grid[rows][i] = getCell(rows, i);
 				char location = values[i].charAt(0);
+				
 				if(location == 'X') {
 					grid[rows][i].setUnused();
 					grid[rows][i].setInitital('X');
 					grid[rows][i].setRoom(true);
 					continue;
-				}
+				}				
 				grid[rows][i].setInitital(location);
+				
 				if(location == 'W') {
 					grid[rows][i].setWalkway();
-				}
-				else if(roomMap.containsKey(location)) {
+				} else if(roomMap.containsKey(location)) {
 					grid[rows][i].setInitital(location);
 					grid[rows][i].setRoom(true);
 				}
+				
 				if(values[i].length() == 2) {
 					//switch statement based on the second character
 					char tmp = values[i].charAt(1);
@@ -338,5 +300,45 @@ public class Board {
 			}
 			rows++;
 		}					
+	}
+	
+	// returns set of targets
+	public Set<BoardCell> getTargets() {
+		return targets;
+	}
+	
+	// returns room based on key from room map
+	public Room getRoom(char c) {
+		return roomMap.get(c);
+	}
+
+	// returns BoardCell from grid array
+	public BoardCell getCell(int i, int j) {
+		return grid[i][j];
+	}
+
+	// returns room from the room map
+	public Room getRoom(BoardCell cell) {
+		return getRoom(cell.getInitial());
+	}
+
+	// returns the number of columns
+	public int getNumColumns() {
+		return numCols;
+	}
+
+	// returns the number of rows
+	public int getNumRows() {
+		return numRows;
+	}
+
+	// returns the amount of rooms
+	public int getAmountRooms() {
+		return roomMap.size();
+	}
+
+	// returns a adjacency list for any given cell
+	public Set<BoardCell> getAdjList(int i, int j) {
+		return getCell(i, j).getAdjList();
 	}
 }

@@ -56,9 +56,7 @@ public class BoardCell {
 		return secretPassage;
 	}
 	
-	
-	
-	
+		
 	//setters for occupied, dd, label, center, secret passage
 	public void setOccupied(boolean check) {
 		this.isOccupied = check;
