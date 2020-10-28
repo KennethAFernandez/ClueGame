@@ -15,40 +15,39 @@ import java.util.TreeSet;
 
 public class Board {
 
-	// Integers to hold the setup values
+	// Integers to hold the initial setup values
 	private int numRows;
 	private int numCols;
 	private int numDoors;
 	private int numRooms;
-			
+	
+	
 	// Strings to hold the file names
 	private String layoutConfigFile;
 	private String setupConfigFile;
 	
-	// Array to hold the board 
+	
+	// Array to hold the board of BoardCells
 	private BoardCell[][] grid;
 	
-	// Mpas to hold all the rooms, secret passages and room centers
+	
+	// Maps to hold all the rooms, secret passages and room centers
 	Map<Character, Room> roomMap;
 	Map<Character, BoardCell> passageMap;
 	Map<Character, BoardCell> centerMap;
+	
 	
 	// sets to hold targets, and vistited cells
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
 
 	
-	
 	// singleton method
 	private static Board theInstance = new Board();
-	private Board() {
-		super();
-	}
-	public static Board getInstance() {
-		return theInstance;
-	}
+	private Board() {super();}
+	public static Board getInstance() {return theInstance;}
 	
-
+	
 	// function to try and run the config files
 	// try/catch for file not found exceptions, or bad format exceptions
 	public void initialize() {
@@ -114,23 +113,26 @@ public class Board {
 			}
 		}
 	}
-
-
+	
+	
 	// helper method to adjacencies method that validates a cell
 	// cell is valid if it is in the bounds of the board
 	public boolean validateCellBounds(int row, int col) {
 		return (row >= 0 && row < numRows && col >= 0 && col < numCols);
 	}
 
+	
 	// creates sets and recursively calls findTargets()
+	// in order to calculate legal moves
 	public void calcTargets(BoardCell startCell, int path) {
 		targets = new HashSet<BoardCell>();
 		visited = new HashSet<BoardCell>();
 		visited.add(startCell);
 		findTargets(startCell, path);
 	}
-
-	// calculates targets for a given cell and path
+	
+	
+	// calculates valid targets for a given cell and path
 	public void findTargets(BoardCell startCell, int path) {
 		for (BoardCell cell : startCell.getAdjList()) {
 			if (!visited.contains(cell)) {
@@ -148,73 +150,83 @@ public class Board {
 		}
 	}
 
-	// getters
+	// returns set of targets
 	public Set<BoardCell> getTargets() {
 		return targets;
 	}
-
+	
+	// returns room based on key from room map
 	public Room getRoom(char c) {
 		return roomMap.get(c);
 	}
 
+	// returns BoardCell from grid array
 	public BoardCell getCell(int i, int j) {
 		return grid[i][j];
 	}
 
+	// returns room from the room map
 	public Room getRoom(BoardCell cell) {
 		return getRoom(cell.getInitial());
 	}
 
+	// returns the number of columns
 	public int getNumColumns() {
 		return numCols;
 	}
 
+	// returns the number of rows
 	public int getNumRows() {
 		return numRows;
 	}
 
+	// returns the amount of rooms
 	public int getAmountRooms() {
 		return roomMap.size();
 	}
 
+	// returns the amount of doors
 	public int getAmountDoors() {
 		return numDoors;
 	}
 
+	// returns a adjacency list for any given cell
 	public Set<BoardCell> getAdjList(int i, int j) {
 		return getCell(i, j).getAdjList();
 	}
 
-	// sets the file names
+	// sets the file names with proper path "data"
 	public void setConfigFiles(String string, String string2) {
 		this.layoutConfigFile = "data/" + string;
 		this.setupConfigFile = "data/" + string2;
 	}
+	
 
-	// method we created to get the number of rows and columns
-	@SuppressWarnings("resource")
+	// method we created to get the number of rows and columns 
+	// before we iterate through the files for specifics
 	public void setConfigValues() throws FileNotFoundException, BadConfigFormatException {
-
 		FileReader reader = new FileReader(layoutConfigFile);
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(reader);
 		String currLine;
-		String[] values = null;
+		String[] values = null;		
 		char key;
 		int cols = 0;
 		int rows = 0;
 		boolean firstIter = true;
-
+		
 		while (scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split("[\\,\\s]+");
 			cols = values.length;
 			rows++;
 		}
-
+		
 		numRows = rows;
 		numCols = cols;
 		grid = new BoardCell[numRows][numCols];
-		// creates grid
+		
+		// creates grid based of off number of rows and columns
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < numCols; j++) {
 				grid[i][j] = new BoardCell(i, j);
@@ -223,14 +235,15 @@ public class Board {
 		}
 	}
 
+	
 	// loads the given legend and creates the room map
-	@SuppressWarnings("resource")
 	public void loadSetupConfig() throws BadConfigFormatException, FileNotFoundException {
-		roomMap = new HashMap<Character, Room>();
+		roomMap = new HashMap<Character, Room>();		
 		FileReader reader = new FileReader(setupConfigFile);
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(reader);
 		String currLine;
-		String[] values;
+		String[] values;		
 		char key;
 
 		while (scanner.hasNext()) {
@@ -239,7 +252,7 @@ public class Board {
 			if (values[0].equals("//")) {
 				continue;
 			}
-			// adding to the room map
+			// adding key and value to room map
 			if (values[0].equals("Room") || values[0].equals("Space")) {
 				key = values[2].charAt(0);
 				if (!(Character.isLetter(key))) {
@@ -251,19 +264,21 @@ public class Board {
 		}
 	}
 
+	
 	// goes through the csv file and checks for doors, door direction
 	// label cells, center cells using switch statement
-	@SuppressWarnings("resource")
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException{
 		passageMap = new HashMap<Character, BoardCell>();
-		centerMap = new HashMap<Character, BoardCell>();
-		
+		centerMap = new HashMap<Character, BoardCell>();		
 		FileReader reader = new FileReader(layoutConfigFile);
-		Scanner scanner = new Scanner(reader);
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(reader);		
 		String currLine;
 		String[] values;
+		
 		int cols = 0; 
 		int rows = 0;
+		
 		while(scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split(",");
