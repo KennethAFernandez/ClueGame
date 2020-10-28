@@ -224,82 +224,81 @@ public class Board {
 	// label cells, center cells using switch statement
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException{
 		passageMap = new HashMap<Character, BoardCell>();
-		centerMap = new HashMap<Character, BoardCell>();		
+		centerMap = new HashMap<Character, BoardCell>();
+		
 		FileReader reader = new FileReader(layoutConfigFile);
-		@SuppressWarnings("resource")
-		Scanner scanner = new Scanner(reader);		
+		Scanner scanner = new Scanner(reader);
 		String currLine;
 		String[] values;
-		
 		int cols = 0; 
 		int rows = 0;
-		
 		while(scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split(",");
 			cols = values.length;
 			//throwing badConfigForamtException in case of number columns is inconsistent
 			if(numCols!= cols) {
-				throw new BadConfigFormatException("Bad Format: Number of columns is not consitent through out");
+				throw new BadConfigFormatException("Error with config files");
 			}
-			
 			for(int i = 0; i < cols; ++i) {
 				grid[rows][i] = getCell(rows, i);
 				char location = values[i].charAt(0);
-				
 				if(location == 'X') {
 					grid[rows][i].setUnused();
 					grid[rows][i].setInitital('X');
 					grid[rows][i].setRoom(true);
 					continue;
-				}				
+				}
 				grid[rows][i].setInitital(location);
-				
 				if(location == 'W') {
 					grid[rows][i].setWalkway();
-				} else if(roomMap.containsKey(location)) {
+				}
+				else if(roomMap.containsKey(location)) {
 					grid[rows][i].setInitital(location);
 					grid[rows][i].setRoom(true);
 				}
-				
 				if(values[i].length() == 2) {
-					//switch statement based on the second character
+					//populates maps within the Board class to aid in populating the adjacency lists
 					char tmp = values[i].charAt(1);
-					switch (tmp) {
-					case '>':
-						grid[rows][i].setDoor();
-						grid[rows][i].setDoorDirection(DoorDirection.RIGHT);
-						continue;
-					case '<':
-						grid[rows][i].setDoor();
-						grid[rows][i].setDoorDirection(DoorDirection.LEFT);
-						continue;
-					case '^':
-						grid[rows][i].setDoor();
-						grid[rows][i].setDoorDirection(DoorDirection.UP);
-						continue;
-					case 'v':
-						grid[rows][i].setDoor();
-						grid[rows][i].setDoorDirection(DoorDirection.DOWN);
-						continue;
-					case '#':
-						grid[rows][i].setLabel();
-						roomMap.get(location).setLabel(grid[rows][i]);
-						continue;
-					case '*':
-						grid[rows][i].setCenter();
-						roomMap.get(location).setCenter(grid[rows][i]);
-						centerMap.put(location, grid[rows][i]);
-						continue;	
-					default:
-						grid[rows][i].setSecretPassage(tmp);
-						passageMap.put(tmp, grid[rows][i]);
-						continue;
-					}
+					specialCell(tmp, rows, i, location);
 				}
 			}
 			rows++;
 		}					
+	}
+	// Helper function for LoadLayoutConfig
+	private void specialCell(char tmp, int rows, int i, char location) {
+		switch (tmp) {
+		case '>':
+			grid[rows][i].setDoor();
+			grid[rows][i].setDoorDirection(DoorDirection.RIGHT);
+			return;
+		case '<':
+			grid[rows][i].setDoor();
+			grid[rows][i].setDoorDirection(DoorDirection.LEFT);
+			return;
+		case '^':
+			grid[rows][i].setDoor();
+			grid[rows][i].setDoorDirection(DoorDirection.UP);
+			return;
+		case 'v':
+			grid[rows][i].setDoor();
+			grid[rows][i].setDoorDirection(DoorDirection.DOWN);
+			return;
+		case '#':
+			grid[rows][i].setLabel();
+			roomMap.get(location).setLabel(grid[rows][i]);
+			return;
+		case '*':
+			grid[rows][i].setCenter();
+			roomMap.get(location).setCenter(grid[rows][i]);
+			centerMap.put(location, grid[rows][i]);
+			return;
+		default:
+			grid[rows][i].setSecretPassage(tmp);
+			passageMap.put(tmp, grid[rows][i]);
+			return;
+		}
 	}
 	
 	// returns set of targets
