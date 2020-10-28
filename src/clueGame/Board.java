@@ -85,6 +85,7 @@ public class Board {
 						cell.addAdj(getCell(i, j-1));
 					}
 				} 
+				
 				if(cell.isDoorway()) {
 					DoorDirection tmp = cell.getDoorDirection();
 					Character roomLoc ='X';
@@ -100,16 +101,16 @@ public class Board {
 					if(tmp == DoorDirection.LEFT) {
 						roomLoc = getCell(i, j-1).getInitial();
 					}
-
 					cell.addAdj(centerMap.get(roomLoc));
 					centerMap.get(roomLoc).addAdj(cell);
 				}
+				
 				if(cell.isRoomCenter()) {
 					if(passageMap.containsKey(cell.getInitial())) {
 						Character tmp = (passageMap.get(cell.getInitial())).getInitial();
 						cell.addAdj(centerMap.get(tmp));
 					}						
-				}
+				}				
 			}
 		}
 	}
@@ -185,10 +186,10 @@ public class Board {
 		return roomMap.size();
 	}
 
-	// returns the amount of doors
-	public int getAmountDoors() {
-		return numDoors;
-	}
+//	// returns the amount of doors
+//	public int getAmountDoors() {
+//		return numDoors;
+//	}
 
 	// returns a adjacency list for any given cell
 	public Set<BoardCell> getAdjList(int i, int j) {
