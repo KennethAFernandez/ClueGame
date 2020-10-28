@@ -20,31 +20,37 @@ public class Board {
 	private int numCols;
 	private int numDoors;
 	private int numRooms;
+			
 	// Strings to hold the file names
 	private String layoutConfigFile;
 	private String setupConfigFile;
+	
 	// Array to hold the board 
 	private BoardCell[][] grid;
+	
 	// Mpas to hold all the rooms, secret passages and room centers
 	Map<Character, Room> roomMap;
 	Map<Character, BoardCell> passageMap;
 	Map<Character, BoardCell> centerMap;
+	
 	// sets to hold targets, and vistited cells
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
 
+	
+	
+	// singleton method
 	private static Board theInstance = new Board();
-
 	private Board() {
 		super();
 	}
-
 	public static Board getInstance() {
 		return theInstance;
 	}
+	
 
 	// function to try and run the config files
-	// catch any file not found exceptions, or bad format exceptions
+	// try/catch for file not found exceptions, or bad format exceptions
 	public void initialize() {
 		try {
 			setConfigValues();
@@ -58,6 +64,7 @@ public class Board {
 		}
 	}
 
+	
 	// calculates the adjacencies
 	// checks if walkway, then if doorway, than if it is a room center
 	public void adjacencies() {
@@ -66,16 +73,16 @@ public class Board {
 				char temp = getCell(i, j).getInitial();
 				BoardCell cell = getCell(i, j);
 				if(cell.isWalkway()) {
-					if(validate(i+1, j) && getCell(i+1, j).isWalkway()) {
+					if(validateCellBounds(i+1, j) && getCell(i+1, j).isWalkway()) {
 						cell.addAdj(getCell(i+1, j));
 					}
-					if(validate(i-1, j) && getCell(i-1, j).isWalkway()) {
+					if(validateCellBounds(i-1, j) && getCell(i-1, j).isWalkway()) {
 						cell.addAdj(getCell(i-1, j));
 					}
-					if(validate(i, j+1) && getCell(i, j+1).isWalkway()) {
+					if(validateCellBounds(i, j+1) && getCell(i, j+1).isWalkway()) {
 						cell.addAdj(getCell(i, j+1));
 					}
-					if(validate(i, j-1) && getCell(i, j-1).isWalkway()) {
+					if(validateCellBounds(i, j-1) && getCell(i, j-1).isWalkway()) {
 						cell.addAdj(getCell(i, j-1));
 					}
 				} 
@@ -110,7 +117,8 @@ public class Board {
 
 
 	// helper method to adjacencies method that validates a cell
-	public boolean validate(int row, int col) {
+	// cell is valid if it is in the bounds of the board
+	public boolean validateCellBounds(int row, int col) {
 		return (row >= 0 && row < numRows && col >= 0 && col < numCols);
 	}
 
