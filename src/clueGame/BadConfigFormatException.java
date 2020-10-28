@@ -6,7 +6,7 @@ package clueGame;
 public class BadConfigFormatException extends Exception{
 
 	public BadConfigFormatException() {
-		super("Error");
+		super("Error, bad configurationin in format of files");
 	}
 	
 	public BadConfigFormatException(String message) {

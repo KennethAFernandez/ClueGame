@@ -186,11 +186,6 @@ public class Board {
 		return roomMap.size();
 	}
 
-//	// returns the amount of doors
-//	public int getAmountDoors() {
-//		return numDoors;
-//	}
-
 	// returns a adjacency list for any given cell
 	public Set<BoardCell> getAdjList(int i, int j) {
 		return getCell(i, j).getAdjList();
@@ -257,7 +252,7 @@ public class Board {
 			if (values[0].equals("Room") || values[0].equals("Space")) {
 				key = values[2].charAt(0);
 				if (!(Character.isLetter(key))) {
-					throw new BadConfigFormatException("Bad format (KEY) " + setupConfigFile);
+					throw new BadConfigFormatException("Bad format: Inappropriate value for room initial in legend " + setupConfigFile);
 				}
 				Room room = new Room(values[1]);
 				roomMap.put(key, room);
@@ -286,7 +281,7 @@ public class Board {
 			cols = values.length;
 			//throwing badConfigForamtException in case of number columns is inconsistent
 			if(numCols!= cols) {
-				throw new BadConfigFormatException("Error with config files");
+				throw new BadConfigFormatException("Bad Format: Number of columns is not consitent through out");
 			}
 			for(int i = 0; i < cols; ++i) {
 				grid[rows][i] = getCell(rows, i);
