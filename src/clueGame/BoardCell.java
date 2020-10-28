@@ -69,7 +69,6 @@ public class BoardCell {
 	}
 	public void setLabel() {
 		this.roomLabel = true;
-		
 	}
 	public void setWalkway() {
 		this.walkway = true;
