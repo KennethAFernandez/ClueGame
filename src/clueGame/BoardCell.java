@@ -115,7 +115,7 @@ public class BoardCell {
 	public boolean isPassage() {
 		return isPassage;
 	}
-	public boolean isCellUnused() {
+	public boolean isUnused() {
 		return isUnused;
 	}
 
