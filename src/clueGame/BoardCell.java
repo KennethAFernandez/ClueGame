@@ -7,9 +7,11 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class BoardCell {
 
-	
+	// ints to hold row/ col values
+	// char to hold cell's initial
 	private int row, col;
 	private char initial;
+	// booleans to help define cell
 	private boolean roomLabel;
 	private boolean roomCenter;
 	private boolean isRoom;
@@ -19,6 +21,8 @@ public class BoardCell {
 	private boolean isPassage;
 	private boolean walkway;
 	private char secretPassage;
+	// set to hold adj list
+	// doorDirection tells which way door is facing
 	Set<BoardCell> adjList;
 	DoorDirection doorDirection;
 	

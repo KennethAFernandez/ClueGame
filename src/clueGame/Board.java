@@ -80,7 +80,6 @@ public class Board {
 					}
 				} 
 				if(cell.isDoorway()) {
-
 					DoorDirection tmp = cell.getDoorDirection();
 					Character roomLoc ='X';
 					if(tmp == DoorDirection.UP) {
@@ -110,7 +109,7 @@ public class Board {
 	}
 
 
-	// helper func to adjacencies that validates a cell
+	// helper method to adjacencies method that validates a cell
 	public boolean validate(int row, int col) {
 		return (row >= 0 && row < numRows && col >= 0 && col < numCols);
 	}
