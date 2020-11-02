@@ -12,12 +12,12 @@ Room, Closet, C
 Space, Walkway, W
 Space, Unused, X
 // Players on board
-Player, Mustard, Yellow
-Player, Scarlet, Red
-Player, Green, Green
-Player, Peacock, Blue
-Player, White, White
-Player, Plum, Black
+Player, Mustard, Yellow, 6, 5
+Player, Scarlet, Red, 6, 15
+Player, Green, Green, 15, 15
+Player, Peacock, Blue, 15, 8
+Player, White, White, 11, 9
+Player, Plum, Black, 11, 14
 // Weapons
 Weapon, knife
 Weapon, rope

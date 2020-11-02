@@ -2,16 +2,10 @@ package clueGame;
 
 import java.awt.Color;
 
-public class Card extends Player{
+public class Card{
 
-	String cardName;
-	CardType cardType;
-	
-	public Card(String name, CardType cardType, Color color) {
-		super(name, color);
-		this.cardName = name;
-		this.cardType =  cardType;
-	}
+	private String cardName;
+	private CardType cardType;
 	
 	public Card(String name, CardType cardType) {
 		super();

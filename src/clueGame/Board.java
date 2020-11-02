@@ -21,36 +21,37 @@ public class Board {
 	private int numCols;
 	private int numDoors;
 	private int numRooms;
-	
-	
+
+
 	// Strings to hold the file names
 	private String layoutConfigFile;
 	private String setupConfigFile;
-	
-	
+
+
 	// Array to hold the board of BoardCells
 	private BoardCell[][] grid;
-	
-	
+
+
 	// Maps to hold all the rooms, secret passages and room centers
 	Map<Character, Room> roomMap;
 	Map<Character, BoardCell> passageMap;
 	Map<Character, BoardCell> centerMap;
-	Map<String, Color> players;
-	
-	
+	Map<String, Player> players;
+	ArrayList<Card> deck;
+
+
 	// sets to hold targets, and vistited cells
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
 	Set<String> weapons;
 
-	
+
 	// singleton method
 	private static Board theInstance = new Board();
 	private Board() {super();}
 	public static Board getInstance() {return theInstance;}
-	
-	
+
+
 	// function to try and run the config files
 	// try/catch for file not found exceptions, or bad format exceptions
 	public void initialize() {
@@ -65,14 +66,14 @@ public class Board {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	public void deal() {
-		
-	}
-	
-	
 
-	
+	public void deal() {
+
+	}
+
+
+
+
 	// calculates the adjacencies
 	// checks if walkway, then if doorway, than if it is a room center
 	public void adjacencies() {
@@ -94,7 +95,7 @@ public class Board {
 						cell.addAdj(getCell(i, j-1));
 					}
 				} 
-				
+
 				if(cell.isDoorway()) {
 					DoorDirection tmp = cell.getDoorDirection();
 					Character roomLoc ='X';
@@ -113,7 +114,7 @@ public class Board {
 					cell.addAdj(centerMap.get(roomLoc));
 					centerMap.get(roomLoc).addAdj(cell);
 				}
-				
+
 				if(cell.isRoomCenter()) {
 					if(passageMap.containsKey(cell.getInitial())) {
 						Character tmp = (passageMap.get(cell.getInitial())).getInitial();
@@ -123,15 +124,15 @@ public class Board {
 			}
 		}
 	}
-	
-	
+
+
 	// helper method to adjacencies method that validates a cell
 	// cell is valid if it is in the bounds of the board
 	public boolean validateCellBounds(int row, int col) {
 		return (row >= 0 && row < numRows && col >= 0 && col < numCols);
 	}
 
-	
+
 	// creates sets and recursively calls findTargets()
 	// in order to calculate legal moves
 	public void calcTargets(BoardCell startCell, int path) {
@@ -140,8 +141,8 @@ public class Board {
 		visited.add(startCell);
 		findTargets(startCell, path);
 	}
-	
-	
+
+
 	// calculates valid targets for a given cell and path
 	public void findTargets(BoardCell startCell, int path) {
 		for (BoardCell cell : startCell.getAdjList()) {
@@ -164,7 +165,7 @@ public class Board {
 		this.layoutConfigFile = "data/" + string;
 		this.setupConfigFile = "data/" + string2;
 	}
-	
+
 
 	// method we created to get the number of rows and columns 
 	// before we iterate through the files for specifics
@@ -178,18 +179,18 @@ public class Board {
 		int cols = 0;
 		int rows = 0;
 		boolean firstIter = true;
-		
+
 		while (scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split("[\\,\\s]+");
 			cols = values.length;
 			rows++;
 		}
-		
+
 		numRows = rows;
 		numCols = cols;
 		grid = new BoardCell[numRows][numCols];
-		
+
 		// creates grid based of off number of rows and columns
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < numCols; j++) {
@@ -199,11 +200,12 @@ public class Board {
 		}
 	}
 
-	
+
 	// loads the given legend and creates the room map
 	public void loadSetupConfig() throws BadConfigFormatException, FileNotFoundException {
+		deck = new ArrayList<Card>();
 		roomMap = new HashMap<Character, Room>();		
-		players = new HashMap<String, Color>();
+		players = new HashMap<String, Player>();
 		weapons = new HashSet<String>();
 		FileReader reader = new FileReader(setupConfigFile);
 		@SuppressWarnings("resource")
@@ -211,15 +213,15 @@ public class Board {
 		String currLine;
 		String[] values;		
 		char key;
-		Card newCard;
-		Color color = null;
-		Player player;
+		boolean firstIter = true;
+
+		Color color = null;		
 
 		while (scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split(", ");
 			String name = values[0];
-					
+
 			if(name.equals("Room") || name.equals("Space")) {
 				key = values[2].charAt(0);
 				if (!(Character.isLetter(key))) {
@@ -227,41 +229,63 @@ public class Board {
 				}
 				Room room = new Room(values[1]);
 				roomMap.put(key, room);
-				newCard = new Card(name, CardType.ROOM);
+				if(name.equals("Room")) {
+					Card newCard;
+					newCard = new Card(name, CardType.ROOM);
+					deck.add(newCard);
+				}
 			}
-			if(name.equals("Player")) {				
+
+			if(name.equals("Player")) {		
 				switch(values[2]) {
 				case "Yellow":
 					color = Color.YELLOW;
-					return;
+					break;
 				case "Red":
 					color = Color.RED;
-					return;
+					break;
 				case "Green":
 					color = Color.GREEN;
-					return;
+					break;
 				case "Blue":
 					color = Color.BLUE;
-					return;
+					break;
 				case "White":
 					color = Color.WHITE;
-					return;
+					break;
 				case "Black":
 					color = Color.BLACK;
-					return;
+					break;
 				}
-				newCard = new Card(name, CardType.PERSON, color);
-				players.put(name, color);
-			
+				
+				Card newCard;
+				newCard = new Card(values[1], CardType.ROOM);
+				deck.add(newCard);
+				
+				if(firstIter == true) {
+					Player player = new HumanPlayer(values[1], color, Integer.parseInt(values[3]), Integer.parseInt(values[4]));
+					players.put(values[1], player);
+					firstIter = false;
+				}else {					
+					Player player = new ComputerPlayer(values[1], color, Integer.parseInt(values[3]), Integer.parseInt(values[4]));
+					players.put(values[1], player);
+				}
+
 			} else if (name.equals("Weapon")) {
+				Card newCard;
 				newCard = new Card(name, CardType.WEAPON);
+				deck.add(newCard);
+				weapons.add(values[1]);
 			} else {
 				continue;
 			}
 		}
+		
+		
+		
 	}
 
-	
+
 	// goes through the csv file and checks for doors, door direction
 	// label cells, center cells using switch statement
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException{
@@ -342,21 +366,24 @@ public class Board {
 			return;
 		}
 	}
-	
-	
-	public Map<String, Color> getPlayers(){
+
+
+	public ArrayList<Card> getDeck(){
+		return deck;
+	}
+	public Map<String, Player> getPlayers(){
 		return players;
 	}
-	
+
 	public Set<String> getWeapons(){
 		return weapons;
 	}
-	
+
 	// returns set of targets
 	public Set<BoardCell> getTargets() {
 		return targets;
 	}
-	
+
 	// returns room based on key from room map
 	public Room getRoom(char c) {
 		return roomMap.get(c);
