@@ -1,0 +1,27 @@
+// Rooms and room cards
+Room, Main Hall, M
+Room, Cooking Room, K
+Room, Relaxing Room, R
+Room, Ping Pong Room, P
+Room, Library, L
+Room, Dining Room, D
+Room, TV Room, T
+Room, School, S
+Room, Closet, C
+// Other spaces on board
+Space, Walkway, W
+Space, Unused, X
+// Players on board
+Player, Mustard, Yellow
+Player, Scarlet, Red
+Player, Green, Green
+Player, Peacock, Blue
+Player, White, White
+Player, Plum, Black
+// Weapons
+Weapon, knife
+Weapon, rope
+Weapon, dumbbell
+Weapon, poison
+Weapon, pipe
+Weapon, revolver

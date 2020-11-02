@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -35,11 +36,13 @@ public class Board {
 	Map<Character, Room> roomMap;
 	Map<Character, BoardCell> passageMap;
 	Map<Character, BoardCell> centerMap;
+	Map<String, Color> players;
 	
 	
 	// sets to hold targets, and vistited cells
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
+	Set<String> weapons;
 
 	
 	// singleton method
@@ -62,6 +65,12 @@ public class Board {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	public void deal() {
+		
+	}
+	
+	
 
 	
 	// calculates the adjacencies
@@ -194,25 +203,58 @@ public class Board {
 	// loads the given legend and creates the room map
 	public void loadSetupConfig() throws BadConfigFormatException, FileNotFoundException {
 		roomMap = new HashMap<Character, Room>();		
+		players = new HashMap<String, Color>();
+		weapons = new HashSet<String>();
 		FileReader reader = new FileReader(setupConfigFile);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(reader);
 		String currLine;
 		String[] values;		
 		char key;
+		Card newCard;
+		Color color = null;
+		Player player;
 
 		while (scanner.hasNext()) {
 			currLine = scanner.nextLine();
 			values = currLine.split(", ");
 			String name = values[0];
 					
-			if (name.equals("Room") || name.equals("Space")) {
+			if(name.equals("Room") || name.equals("Space")) {
 				key = values[2].charAt(0);
 				if (!(Character.isLetter(key))) {
 					throw new BadConfigFormatException("Bad format: Inappropriate value for room initial in legend " + setupConfigFile);
 				}
 				Room room = new Room(values[1]);
 				roomMap.put(key, room);
+				newCard = new Card(name, CardType.ROOM);
+			}
+			if(name.equals("Player")) {				
+				switch(values[2]) {
+				case "Yellow":
+					color = Color.YELLOW;
+					return;
+				case "Red":
+					color = Color.RED;
+					return;
+				case "Green":
+					color = Color.GREEN;
+					return;
+				case "Blue":
+					color = Color.BLUE;
+					return;
+				case "White":
+					color = Color.WHITE;
+					return;
+				case "Black":
+					color = Color.BLACK;
+					return;
+				}
+				newCard = new Card(name, CardType.PERSON, color);
+				players.put(name, color);
+			
+			} else if (name.equals("Weapon")) {
+				newCard = new Card(name, CardType.WEAPON);
 			} else {
 				continue;
 			}
@@ -225,8 +267,8 @@ public class Board {
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException{
 		passageMap = new HashMap<Character, BoardCell>();
 		centerMap = new HashMap<Character, BoardCell>();
-		
 		FileReader reader = new FileReader(layoutConfigFile);
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(reader);
 		String currLine;
 		String[] values;
@@ -299,6 +341,15 @@ public class Board {
 			passageMap.put(tmp, grid[rows][i]);
 			return;
 		}
+	}
+	
+	
+	public Map<String, Color> getPlayers(){
+		return players;
+	}
+	
+	public Set<String> getWeapons(){
+		return weapons;
 	}
 	
 	// returns set of targets
