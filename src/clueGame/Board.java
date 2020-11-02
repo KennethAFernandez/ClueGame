@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -66,12 +67,6 @@ public class Board {
 			System.out.println(e.getMessage());
 		}
 	}
-
-	public void deal() {
-
-	}
-
-
 
 
 	// calculates the adjacencies
@@ -257,11 +252,11 @@ public class Board {
 					color = Color.BLACK;
 					break;
 				}
-				
+
 				Card newCard;
 				newCard = new Card(values[1], CardType.ROOM);
 				deck.add(newCard);
-				
+
 				if(firstIter == true) {
 					Player player = new HumanPlayer(values[1], color, Integer.parseInt(values[3]), Integer.parseInt(values[4]));
 					players.put(values[1], player);
@@ -280,9 +275,23 @@ public class Board {
 				continue;
 			}
 		}
-		
-		
-		
+
+		deal();
+
+	}
+
+	public void deal() {
+		Collections.shuffle(deck);
+		int counter = 0;
+		Card card;
+		for(Map.Entry<String, Player> entry: players.entrySet()) {
+			for(int i=0; i<3; i++) {
+				card = deck.get(counter);
+				entry.getValue().updateHand(card);
+				deck.remove(counter);
+				counter++;
+			}
+		}
 	}
 
 

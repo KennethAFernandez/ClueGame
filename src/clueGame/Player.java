@@ -9,11 +9,10 @@ public abstract class Player {
 	private Color color;
 	private int row, column;
 	private BoardCell location;
-	private boolean humanComputer;
 	private ArrayList<Card> hand = new ArrayList<Card>();
 	
 	public Player(String name, Color color, int row, int column) {
-		this.name = name;
+		this.setName(name);
 		this.setColor(color);
 		this.setRow(row);
 		this.setColumn(column);
@@ -21,8 +20,9 @@ public abstract class Player {
 	}
 	
 	public void updateHand(Card card) {
-		
+		hand.add(card);
 	}
+	
 
 	public ArrayList<Card> getHand() {
 		return hand;
@@ -62,6 +62,14 @@ public abstract class Player {
 
 	public void setRow(int row) {
 		this.row = row;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

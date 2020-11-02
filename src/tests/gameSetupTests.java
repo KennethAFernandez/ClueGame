@@ -95,5 +95,14 @@ public class gameSetupTests {
 		Assert.assertTrue(weapons.contains("revolver"));
 	}
 	
-	
+	@Test
+	public void testLocations() {
+		Map<String, Player> players = board.getPlayers();
+		Assert.assertEquals(board.getCell(6, 5), players.get("Mustard").getLocation()); 
+		Assert.assertEquals(board.getCell(6, 15), players.get("Scarlet").getLocation()); 
+		Assert.assertEquals(board.getCell(15, 15), players.get("Green").getLocation()); 
+		Assert.assertEquals(board.getCell(15, 8), players.get("Peacock").getLocation()); 
+		Assert.assertEquals(board.getCell(11, 9), players.get("White").getLocation()); 
+		Assert.assertEquals(board.getCell(11, 14), players.get("Plum").getLocation()); 
+	}
 }
