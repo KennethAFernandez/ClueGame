@@ -226,7 +226,7 @@ public class Board {
 				roomMap.put(key, room);
 				if(name.equals("Room")) {
 					Card newCard;
-					newCard = new Card(name, CardType.ROOM);
+					newCard = new Card(values[1], CardType.ROOM);
 					deck.add(newCard);
 				}
 			}
@@ -268,7 +268,7 @@ public class Board {
 
 			} else if (name.equals("Weapon")) {
 				Card newCard;
-				newCard = new Card(name, CardType.WEAPON);
+				newCard = new Card(values[1], CardType.WEAPON);
 				deck.add(newCard);
 				weapons.add(values[1]);
 			} else {
@@ -283,14 +283,11 @@ public class Board {
 	public void deal() {
 		Collections.shuffle(deck);
 		int counter = 0;
-		Card card;
 		for(Map.Entry<String, Player> entry: players.entrySet()) {
-			for(int i=0; i<3; i++) {
-				card = deck.get(counter);
-				entry.getValue().updateHand(card);
-				deck.remove(counter);
-				counter++;
-			}
+			entry.getValue().updateHand(deck.get(counter));
+			entry.getValue().updateHand(deck.get(counter+1));
+			entry.getValue().updateHand(deck.get(counter+2));	
+			counter+=3;
 		}
 	}
 

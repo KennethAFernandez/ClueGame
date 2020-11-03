@@ -105,4 +105,23 @@ public class gameSetupTests {
 		Assert.assertEquals(board.getCell(11, 9), players.get("White").getLocation()); 
 		Assert.assertEquals(board.getCell(11, 14), players.get("Plum").getLocation()); 
 	}
+	
+	@Test
+	public void testHand() {
+		Map<String, Player> players = board.getPlayers();
+		ArrayList<Card> hand = players.get("Mustard").getHand();
+		Assert.assertNotEquals(null, hand);
+		ArrayList<Card> handTwo = players.get("Scarlet").getHand();
+		Assert.assertNotEquals(null, handTwo);
+		ArrayList<Card> handThree = players.get("Green").getHand();
+		Assert.assertNotEquals(null, handThree);
+		ArrayList<Card> handFour = players.get("Peacock").getHand();
+		Assert.assertNotEquals(null, handFour);
+		ArrayList<Card> handFive = players.get("White").getHand();
+		Assert.assertNotEquals(null, handFive);
+		ArrayList<Card> handSix = players.get("Plum").getHand();
+		Assert.assertNotEquals(null, handSix);
+		
+		
+	}
 }
