@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -13,17 +12,21 @@ import org.junit.jupiter.api.BeforeAll;
 
 import clueGame.Board;
 import clueGame.Card;
+import clueGame.CardType;
 import clueGame.ComputerPlayer;
 import clueGame.HumanPlayer;
 import clueGame.Player;
+import clueGame.Solution;
 
 public class gameSetupTests {
-		
+	
+	
+	// constants to check, easily changeable if need be
 	public static final int NUM_ROOMS = 9;
 	public static final int NUM_PLAYER_CARDS = 6;
 	public static final int NUM_WEAPON_CARDS = 6;
 	public static final int NUM_DECK_CARDS = 21;
-	
+	// creates board
 	private static Board board;
 	
 	@BeforeAll
@@ -33,22 +36,28 @@ public class gameSetupTests {
 		board.initialize();
 	}
 	
+	// checks for the correct number of players
 	@Test
-	public void checkNumPlayers() {
+	public void loadNumPlayers() {
 		Map<String, Player> players = board.getPlayers();
 		assertEquals(NUM_PLAYER_CARDS, players.size());
 	}
+	
+	// checks for the correct number of weapons
 	@Test
-	public void checkNumWeapons() {
-		Set<String> weapons = board.getWeapons();
+	public void loadNumWeapons() {
+		ArrayList<Card> weapons = board.getWeapons();
 		assertEquals(NUM_WEAPON_CARDS, weapons.size());
 	}
+	
+	// checks that the deck is the correct size after removal of solution cards
 	@Test
-	public void checkNumDeck() {
+	public void loadNumDeck() {
 		ArrayList<Card> deck = board.getDeck();
-		assertEquals(NUM_DECK_CARDS, deck.size());
+		assertEquals(NUM_DECK_CARDS, deck.size() + 3); // Our algorithm removes 3 cards before shuffling, hence the "+3" term
 	}
 	
+	// confirms all players are where they need to be
 	@Test
 	public void testPlayerNames() {
 		Map<String, Player> players = board.getPlayers();
@@ -61,6 +70,7 @@ public class gameSetupTests {
 		Assert.assertTrue(players.containsKey("Plum"));
 	}
 	
+	// confirms all players correspond to their given colors
 	@Test
 	public void testPlayerColors() {
 		Map<String, Player> players = board.getPlayers();
@@ -72,6 +82,7 @@ public class gameSetupTests {
 		Assert.assertEquals(Color.BLACK, players.get("Plum").getColor());
 	}
 	
+	// tests that the code seperates human players from computer players
 	@Test
 	public void testHumanPlayer() {
 		Map<String, Player> players = board.getPlayers();
@@ -83,18 +94,15 @@ public class gameSetupTests {
 		Assert.assertEquals(ComputerPlayer.class, players.get("Plum").getClass());
 	}
 	
+	// test that weapons is populated and of card type weapon
 	@Test
 	public void testWeapons() {
-		Set<String> weapons = board.getWeapons();
-		Assert.assertEquals(NUM_WEAPON_CARDS, weapons.size());
-		Assert.assertTrue(weapons.contains("knife"));
-		Assert.assertTrue(weapons.contains("rope"));
-		Assert.assertTrue(weapons.contains("dumbbell"));
-		Assert.assertTrue(weapons.contains("poison"));
-		Assert.assertTrue(weapons.contains("pipe"));
-		Assert.assertTrue(weapons.contains("revolver"));
+		ArrayList<Card> weapons = board.getWeapons();
+		Assert.assertTrue(weapons != null);
+		Assert.assertTrue(weapons.get(1).getCardType() == CardType.WEAPON);
 	}
 	
+	// tests that all players are mapped the the correct location
 	@Test
 	public void testLocations() {
 		Map<String, Player> players = board.getPlayers();
@@ -106,6 +114,7 @@ public class gameSetupTests {
 		Assert.assertEquals(board.getCell(11, 14), players.get("Plum").getLocation()); 
 	}
 	
+	// test all of the players hands after the cards are dealt
 	@Test
 	public void testHand() {
 		Map<String, Player> players = board.getPlayers();
@@ -120,8 +129,20 @@ public class gameSetupTests {
 		ArrayList<Card> handFive = players.get("White").getHand();
 		Assert.assertNotEquals(null, handFive);
 		ArrayList<Card> handSix = players.get("Plum").getHand();
-		Assert.assertNotEquals(null, handSix);
-		
-		
+		Assert.assertNotEquals(null, handSix);				
 	}
+	
+	// test that the solution class works
+	@Test
+	public void testSolution() {
+		Card person = new Card("Test", CardType.PERSON);
+		Card room = new Card("Room", CardType.ROOM);
+		Card weapon = new Card("Weapon", CardType.WEAPON);
+		Solution answers = new Solution(person, room, weapon);
+		Assert.assertTrue(answers != null);
+		Assert.assertTrue(answers.getPerson().getCardType() == CardType.PERSON);
+		Assert.assertTrue(answers.getRoom().getCardType() == CardType.ROOM);
+		Assert.assertTrue(answers.getWeapon().getCardType() == CardType.WEAPON);
+	}
+
 }

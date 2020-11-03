@@ -38,13 +38,18 @@ public class Board {
 	Map<Character, BoardCell> passageMap;
 	Map<Character, BoardCell> centerMap;
 	Map<String, Player> players;
+	
+	// Array lists to hold all objects of card types
 	ArrayList<Card> deck;
+	ArrayList<Card> weapons;
+	ArrayList<Card> rooms;
+	ArrayList<Card> gameCharacters; // for the characters in the game; not calling this "players" for clarity.
+	Solution solution;
 
 
 	// sets to hold targets, and vistited cells
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
-	Set<String> weapons;
 
 
 	// singleton method
@@ -196,12 +201,14 @@ public class Board {
 	}
 
 
-	// loads the given legend and creates the room map
+	// loads the given legend, creates the room map, and the cards
 	public void loadSetupConfig() throws BadConfigFormatException, FileNotFoundException {
 		deck = new ArrayList<Card>();
 		roomMap = new HashMap<Character, Room>();		
 		players = new HashMap<String, Player>();
-		weapons = new HashSet<String>();
+		weapons = new ArrayList<Card>();
+		rooms = new ArrayList<Card>();
+		gameCharacters = new ArrayList<Card>();
 		FileReader reader = new FileReader(setupConfigFile);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(reader);
@@ -228,9 +235,14 @@ public class Board {
 					Card newCard;
 					newCard = new Card(values[1], CardType.ROOM);
 					deck.add(newCard);
+					rooms.add(newCard);
 				}
 			}
-
+			
+			// switch statement and corresponding else if to create cards and 
+			// array list of all card types. If the conditional is met then 
+			// we create a new card and add it to the deck and corresponding
+			// array list
 			if(name.equals("Player")) {		
 				switch(values[2]) {
 				case "Yellow":
@@ -256,7 +268,8 @@ public class Board {
 				Card newCard;
 				newCard = new Card(values[1], CardType.ROOM);
 				deck.add(newCard);
-
+				gameCharacters.add(newCard);
+				// creates player class (uses first "person")
 				if(firstIter == true) {
 					Player player = new HumanPlayer(values[1], color, Integer.parseInt(values[3]), Integer.parseInt(values[4]));
 					players.put(values[1], player);
@@ -270,23 +283,44 @@ public class Board {
 				Card newCard;
 				newCard = new Card(values[1], CardType.WEAPON);
 				deck.add(newCard);
-				weapons.add(values[1]);
+				weapons.add(newCard);
 			} else {
 				continue;
 			}
 		}
-
-		deal();
-
+		
+		// try catch for a bad config format exception
+		// surrounding the deal function
+		try {
+			deal();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void deal() {
+	// Shuffles the array lists of all card types while creating solution
+	// Then removes solutions so we can ouput the deal out the rest of the cards
+	// Then after they are removed, we go through out all of players and deal
+	// out cards while checking for any out of bounds exception which would occur
+	// from a bad setup file.
+	public void deal() throws BadConfigFormatException {
+		Collections.shuffle(rooms);
+		Collections.shuffle(weapons);
+		Collections.shuffle(gameCharacters);
+		solution = new Solution(rooms.get(0), weapons.get(0), gameCharacters.get(0));
+		deck.remove(rooms.get(0));
+		deck.remove(weapons.get(0));
+		deck.remove(gameCharacters.get(0));
 		Collections.shuffle(deck);
 		int counter = 0;
-		for(Map.Entry<String, Player> entry: players.entrySet()) {
-			entry.getValue().updateHand(deck.get(counter));
-			entry.getValue().updateHand(deck.get(counter+1));
-			entry.getValue().updateHand(deck.get(counter+2));	
+		for(Map.Entry<String, Player> entry: players.entrySet()) {	
+			if(counter > deck.size()-3) {
+				throw new BadConfigFormatException("Out of bounds exception: Bad Config in setup file");
+			}else {
+				entry.getValue().updateHand(deck.get(counter));
+				entry.getValue().updateHand(deck.get(counter+1));
+				entry.getValue().updateHand(deck.get(counter+2));
+			}
 			counter+=3;
 		}
 	}
@@ -381,7 +415,7 @@ public class Board {
 		return players;
 	}
 
-	public Set<String> getWeapons(){
+	public ArrayList<Card> getWeapons(){
 		return weapons;
 	}
 

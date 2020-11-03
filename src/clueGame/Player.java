@@ -5,12 +5,15 @@ import java.util.ArrayList;
 
 public abstract class Player {
 
+	// variables to hold name of the player, corresponding color,
+	// location and said players hand
 	private String name;
 	private Color color;
 	private int row, column;
 	private BoardCell location;
 	private ArrayList<Card> hand = new ArrayList<Card>();
 	
+	// constructor to set correct variables
 	public Player(String name, Color color, int row, int column) {
 		this.setName(name);
 		this.setColor(color);
@@ -19,15 +22,17 @@ public abstract class Player {
 		this.location = Board.getInstance().getCell(row, column);
 	}
 	
+	// adds cards to array list hand of players
 	public void updateHand(Card card) {
 		hand.add(card);
 	}
 	
-
+	// returns each player's hand
 	public ArrayList<Card> getHand() {
 		return hand;
 	}
 
+	// corresponding setters and getters
 	public void setHand(ArrayList<Card> hand) {
 		this.hand = hand;
 	}
