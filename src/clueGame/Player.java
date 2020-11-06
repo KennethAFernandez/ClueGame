@@ -22,6 +22,16 @@ public abstract class Player {
 		this.location = Board.getInstance().getCell(row, column);
 	}
 	
+	// Player disproves a suggestion
+	public Card disproveSuggestion() {
+		return null;
+		
+	}
+	
+	public void updateSeen(Card seenCard) {
+		
+	}
+	
 	// adds cards to array list hand of players
 	public void updateHand(Card card) {
 		hand.add(card);

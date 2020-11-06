@@ -72,6 +72,18 @@ public class Board {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	
+	//Checking an accusation, return true if accusation matches solution
+	public boolean checkAccusation() {
+		return true;
+	}
+	
+	
+	//Handle a suggestion made
+	public void handleAccusation() {
+		
+	}
 
 
 	// calculates the adjacencies
