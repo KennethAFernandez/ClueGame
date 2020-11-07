@@ -13,7 +13,10 @@ public class Card{
 		this.cardName = name;
 		this.cardType = cardType;
 	}
-
+	
+	
+	// testing wheter to cards are equal using the card name, 
+	// card type and class
 	public boolean equals(Card target) {
 		if(target.cardName == cardName && target.getCardType() == cardType) {
 			if(getClass() == target.getClass()) {
@@ -29,7 +32,7 @@ public class Card{
 	public CardType getCardType() {
 		return cardType;
 	}
-	// returns teh card name
+	// returns the card name
 	public String getCardName() {
 		return cardName;
 	}

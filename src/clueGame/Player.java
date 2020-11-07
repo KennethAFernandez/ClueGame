@@ -2,7 +2,9 @@ package clueGame;
 
 import java.awt.Color;
 import java.util.Random;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public abstract class Player {
 
@@ -13,7 +15,8 @@ public abstract class Player {
 	private int row, column;
 	private BoardCell location;
 	private ArrayList<Card> hand = new ArrayList<Card>();
-	private ArrayList<Card> seen = new ArrayList<Card>();
+	protected ArrayList<Card> seen = new ArrayList<Card>();
+	
 
 	// constructor to set correct variables
 	public Player(String name, Color color, int row, int column) {
@@ -25,6 +28,8 @@ public abstract class Player {
 	}
 
 	// Player disproves a suggestion
+	// iterate through hand, and if it is here add it to the arraylist so 
+	// we can choose a random card to output
 	public Card disproveSuggestion(ArrayList<Card> suggestion) {
 		ArrayList<Card> disproveCards = new ArrayList<Card>();
 		for(Card card: hand) {
@@ -42,6 +47,7 @@ public abstract class Player {
 		}
 	}
 
+	// simply...updates seen
 	public void updateSeen(Card seenCard) {
 		if(!seen.contains(seenCard)) {
 			seen.add(seenCard);
@@ -106,5 +112,14 @@ public abstract class Player {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+	
+	public abstract Card getSuggPerson();
+	public abstract Card getSuggWeapon();
+	public abstract String getSuggRoom();
+	public abstract BoardCell selectTargets(Set<BoardCell> set);
+
+	public void createSuggestion(BoardCell boardCell) {}
 
 }

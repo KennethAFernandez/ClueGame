@@ -76,6 +76,8 @@ public class Board {
 
 
 	//Checking an accusation, return true if accusation matches solution
+	// I cut the if statement condidtional in pieces so it was easier to read and you didn't 
+	// have to scroll to the right forever. 
 	public boolean checkAccusation(Card person, Card location, Card weapon) {
 		if(solution.getPerson().getCardName().equals(person.getCardName()) && 
 				solution.getRoom().getCardName().equals(location.getCardName()) && 
@@ -88,25 +90,26 @@ public class Board {
 
 
 	//Handle a suggestion made
-	public Card handleSuggestion(Card person, Card room, Card weapon) {
-		ArrayList<Card> temp = new ArrayList<Card>();
-		temp.add(person);
-		temp.add(room);
-		temp.add(weapon);
-		Card result;
+	public Card handleSuggestion(Card person, Card room, Card weapon, Player suggestor) {
+		ArrayList<Card> suggestionList = new ArrayList<Card>();
+		suggestionList.add(person);
+		suggestionList.add(room);
+		suggestionList.add(weapon);
+		Card result = null;
 		for(Map.Entry<String, Player> entry: players.entrySet()) {
-			result = entry.getValue().disproveSuggestion(temp);
-			System.out.println(result);
-			if(result != null) {
-				return result;
-			} 
-
-		}
-		
+			if(entry.getValue() == suggestor) {continue;}
+			for(int suggestionIterator = 0; suggestionIterator < 3; ++suggestionIterator) {
+				for(int handIterator = 0; handIterator < 3; ++handIterator) {
+					if(entry.getValue().getHand().get(handIterator).getCardName().equals(suggestionList.get(suggestionIterator).getCardName())) {
+						result = suggestionList.get(suggestionIterator);
+						break;
+					}
+				}
+			}
+			if(result != null) {return result;}
+		} 
 		return null;
-
 	}
-
 
 	// calculates the adjacencies
 	// checks if walkway, then if doorway, than if it is a room center
@@ -300,7 +303,7 @@ public class Board {
 				}
 
 				Card newCard;
-				newCard = new Card(values[1], CardType.ROOM);
+				newCard = new Card(values[1], CardType.PERSON);
 				deck.add(newCard);
 				gameCharacters.add(newCard);
 				// creates player class (uses first "person")
@@ -441,8 +444,15 @@ public class Board {
 	public ArrayList<Card> getDeck(){
 		return deck;
 	}
+	public void addDeckCards(Card card) {
+		deck.add(card);
+	}
 	public Map<String, Player> getPlayers(){
 		return players;
+	}
+	
+	public void setPlayers(Map<String, Player> input) {
+		players = input;
 	}
 
 	public ArrayList<Card> getWeapons(){
