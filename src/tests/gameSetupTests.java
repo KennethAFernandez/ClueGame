@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class gameSetupTests {
 	@Test
 	public void loadNumDeck() {
 		ArrayList<Card> deck = board.getDeck();
-		assertEquals(NUM_DECK_CARDS, deck.size() + 3); // Our algorithm removes 3 cards before shuffling, hence the "+3" term
+		assertEquals(NUM_DECK_CARDS, deck.size() +3);
 	}
 	
 	// confirms all players are where they need to be

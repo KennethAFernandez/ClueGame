@@ -38,7 +38,7 @@ public class Board {
 	Map<Character, BoardCell> passageMap;
 	Map<Character, BoardCell> centerMap;
 	Map<String, Player> players;
-	
+
 	// Array lists to hold all objects of card types
 	ArrayList<Card> deck;
 	ArrayList<Card> weapons;
@@ -66,23 +66,45 @@ public class Board {
 			loadSetupConfig();
 			loadLayoutConfig();
 			adjacencies();
+			deal();
 		} catch (BadConfigFormatException e) {
 			System.out.println(e.getMessage());
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	
+
+
 	//Checking an accusation, return true if accusation matches solution
-	public boolean checkAccusation() {
-		return true;
+	public boolean checkAccusation(Card person, Card location, Card weapon) {
+		if(solution.getPerson().getCardName().equals(person.getCardName()) && 
+				solution.getRoom().getCardName().equals(location.getCardName()) && 
+				solution.getWeapon().getCardName().equals(weapon.getCardName())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-	
-	
+
+
 	//Handle a suggestion made
-	public void handleAccusation() {
+	public Card handleSuggestion(Card person, Card room, Card weapon) {
+		ArrayList<Card> temp = new ArrayList<Card>();
+		temp.add(person);
+		temp.add(room);
+		temp.add(weapon);
+		Card result;
+		for(Map.Entry<String, Player> entry: players.entrySet()) {
+			result = entry.getValue().disproveSuggestion(temp);
+			System.out.println(result);
+			if(result != null) {
+				return result;
+			} 
+
+		}
 		
+		return null;
+
 	}
 
 
@@ -250,7 +272,7 @@ public class Board {
 					rooms.add(newCard);
 				}
 			}
-			
+
 			// switch statement and corresponding else if to create cards and 
 			// array list of all card types. If the conditional is met then 
 			// we create a new card and add it to the deck and corresponding
@@ -300,26 +322,22 @@ public class Board {
 				continue;
 			}
 		}
-		
-		// try catch for a bad config format exception
-		// surrounding the deal function
-		try {
-			deal();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+
 	}
 
 	// Shuffles the array lists of all card types while creating solution
 	// Then removes solutions so we can ouput the deal out the rest of the cards
 	// Then after they are removed, we go through out all of players and deal
-	// out cards while checking for any out of bounds exception which would occur
+	// out cards while checking for any out of bounds exception which would occur	
 	// from a bad setup file.
-	public void deal() throws BadConfigFormatException {
+	public void shuffle() {
 		Collections.shuffle(rooms);
 		Collections.shuffle(weapons);
 		Collections.shuffle(gameCharacters);
-		solution = new Solution(rooms.get(0), weapons.get(0), gameCharacters.get(0));
+	}
+	public void deal() throws BadConfigFormatException {
+		solution = new Solution(gameCharacters.get(0),rooms.get(0), weapons.get(0));
 		deck.remove(rooms.get(0));
 		deck.remove(weapons.get(0));
 		deck.remove(gameCharacters.get(0));

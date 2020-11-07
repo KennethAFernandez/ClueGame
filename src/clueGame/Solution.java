@@ -39,5 +39,9 @@ public class Solution {
 	public void setWeapon(Card weapon) {
 		Weapon = weapon;
 	}
+	
+	public void setLocation(Card location) {
+		room = location;
+	}
 
 }

@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.util.Random;
 import java.util.ArrayList;
 
 public abstract class Player {
@@ -12,7 +13,8 @@ public abstract class Player {
 	private int row, column;
 	private BoardCell location;
 	private ArrayList<Card> hand = new ArrayList<Card>();
-	
+	private ArrayList<Card> seen = new ArrayList<Card>();
+
 	// constructor to set correct variables
 	public Player(String name, Color color, int row, int column) {
 		this.setName(name);
@@ -21,22 +23,40 @@ public abstract class Player {
 		this.setColumn(column);
 		this.location = Board.getInstance().getCell(row, column);
 	}
-	
+
 	// Player disproves a suggestion
-	public Card disproveSuggestion() {
-		return null;
-		
+	public Card disproveSuggestion(ArrayList<Card> suggestion) {
+		ArrayList<Card> disproveCards = new ArrayList<Card>();
+		for(Card card: hand) {
+			if(suggestion.contains(card)) {
+				disproveCards.add(card);
+			}
+		}
+
+		Random num = new Random();
+		if(disproveCards.size() > 0) {
+			int index = num.nextInt(disproveCards.size());
+			return disproveCards.get(index);
+		}else {
+			return null;
+		}
 	}
-	
+
 	public void updateSeen(Card seenCard) {
-		
+		if(!seen.contains(seenCard)) {
+			seen.add(seenCard);
+		}
 	}
-	
+
 	// adds cards to array list hand of players
 	public void updateHand(Card card) {
 		hand.add(card);
 	}
 	
+	public ArrayList<Card> getSeen() {
+		return seen;
+	}
+
 	// returns each player's hand
 	public ArrayList<Card> getHand() {
 		return hand;
