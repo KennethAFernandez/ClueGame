@@ -23,6 +23,7 @@ public class ComputerPlayer extends Player{
 	}
 	
 	
+
 	// Computer player creates a suggestion includes room, a weapon and a player
 	// Room must match location of player, pass board cell as a parameter
 	@Override

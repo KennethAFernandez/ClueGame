@@ -57,7 +57,7 @@ public class Board {
 	private Board() {super();}
 	public static Board getInstance() {return theInstance;}
 
-
+	
 	// function to try and run the config files
 	// try/catch for file not found exceptions, or bad format exceptions
 	public void initialize() {
