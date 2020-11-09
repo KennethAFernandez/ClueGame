@@ -50,6 +50,8 @@ public class Board {
 	// sets to hold targets, and vistited cells
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
+	
+	Player HumanPlayer;
 
 
 	// singleton method
@@ -308,8 +310,8 @@ public class Board {
 				gameCharacters.add(newCard);
 				// creates player class (uses first "person")
 				if(firstIter == true) {
-					Player player = new HumanPlayer(values[1], color, Integer.parseInt(values[3]), Integer.parseInt(values[4]));
-					players.put(values[1], player);
+					HumanPlayer = new HumanPlayer(values[1], color, Integer.parseInt(values[3]), Integer.parseInt(values[4]));
+					players.put(values[1], HumanPlayer);
 					firstIter = false;
 				}else {					
 					Player player = new ComputerPlayer(values[1], color, Integer.parseInt(values[3]), Integer.parseInt(values[4]));
@@ -345,6 +347,7 @@ public class Board {
 		deck.remove(weapons.get(0));
 		deck.remove(gameCharacters.get(0));
 		Collections.shuffle(deck);
+		shuffle(); 
 		int counter = 0;
 		for(Map.Entry<String, Player> entry: players.entrySet()) {	
 			if(counter > deck.size()-3) {
