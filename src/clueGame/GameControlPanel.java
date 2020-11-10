@@ -17,14 +17,18 @@ import javax.swing.border.TitledBorder;
 @SuppressWarnings("serial")
 public class GameControlPanel extends JPanel {
 	
-	String theGuess, guessResult;
+	// strings to hold value names
+	String theGuess, guessResult, turnName;
+	// various variables to hold textfields and buttons
 	private JButton next, accuse;
 	private JTextField guess, result, turn, roll;
 	Player player;
-	int row;
+	int rollNum;
+	Color color;
 	
 	private static Board board;
 
+	// sets various panels and adds them to the main panel
 	public GameControlPanel() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(2, 0));
@@ -44,6 +48,8 @@ public class GameControlPanel extends JPanel {
 		add(mainPanel);
 	}
 	
+	// creates the needed panels and labels, and passes an instance variable
+	// through for updating purposes. then adds everything to the panel.
 	public JPanel createTurnAndRoll() {
 		
 		JPanel panel = new JPanel();
@@ -53,8 +59,8 @@ public class GameControlPanel extends JPanel {
 		JLabel whoseTurn = new JLabel("Whose turn?");
 		JLabel theRoll = new JLabel("Roll:");
 		
-		turn = new JTextField(15);
-		roll = new JTextField(5);
+		turn = new JTextField(turnName);
+		roll = new JTextField(rollNum);
 		
 		panel.setLayout(new GridLayout(2, 0));
 		whoseTurnPanel.setLayout(new GridLayout(1, 2));
@@ -72,6 +78,8 @@ public class GameControlPanel extends JPanel {
 		return panel;
 	}
 	
+	// creates the needed panels and labels, and passes an instance variable
+	// through for updating purposes. then adds everything to the panel.
 	public JPanel createButtons() {
 		
 		JPanel panel = new JPanel();
@@ -87,6 +95,8 @@ public class GameControlPanel extends JPanel {
 		return panel;		
 	}
 	
+	// creates the needed panels and labels, and passes an instance variable
+	// through for updating purposes. then adds everything to the panel.
 	public JPanel createGuess() {
 		
 		JPanel panel = new JPanel();
@@ -102,12 +112,14 @@ public class GameControlPanel extends JPanel {
 
 	}
 	
+	// creates the needed panels and labels, and passes an instance variable
+	// through for updating purposes. then adds everything to the panel.
 	public JPanel createResult() {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1, 0));
 		
-		result = new JTextField(guessResult,25);
+		result = new JTextField(guessResult, 25);
 		result.setBorder(BorderFactory.createTitledBorder("Guess Result!"));
 		
 		panel.add(result);
@@ -116,14 +128,18 @@ public class GameControlPanel extends JPanel {
 		return panel;
 	}
 	
+	// update display function that updates the text boxes
 	public void updateDisplay() {
 		guess.setText(getGuess());
 		result.setText(getResult());
+		turn.setText(turnName);
+		turn.setBackground(color);
+		roll.setText(Integer.toString(rollNum));
 	}
 
+	// setters and getters
 	private void setGuess(String string) {
 		this.theGuess = string;
-
 	}
 	
 	private void setGuessResult(String string) {
@@ -132,7 +148,9 @@ public class GameControlPanel extends JPanel {
 	
 	private void setTurn(ComputerPlayer computerPlayer, int i) {
 		this.player = computerPlayer;
-		this.row = i;
+		this.turnName = computerPlayer.getName();
+		this.rollNum = i;
+		this.color = computerPlayer.getColor();
 	}
 	
 	public String getGuess() {
@@ -141,6 +159,9 @@ public class GameControlPanel extends JPanel {
 	
 	public String getResult() {
 		return guessResult;
+	}
+	public int getRoll() {
+		return rollNum;
 	}
 	
 

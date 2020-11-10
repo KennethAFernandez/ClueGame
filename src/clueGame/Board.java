@@ -38,6 +38,7 @@ public class Board {
 	Map<Character, BoardCell> passageMap;
 	Map<Character, BoardCell> centerMap;
 	Map<String, Player> players;
+	Map<Card, Color> cardColors;
 
 	// Array lists to hold all objects of card types
 	ArrayList<Card> deck;
@@ -342,6 +343,7 @@ public class Board {
 		Collections.shuffle(gameCharacters);
 	}
 	public void deal() throws BadConfigFormatException {
+		cardColors = new HashMap<Card, Color>();
 		solution = new Solution(gameCharacters.get(0),rooms.get(0), weapons.get(0));
 		deck.remove(rooms.get(0));
 		deck.remove(weapons.get(0));
@@ -354,8 +356,11 @@ public class Board {
 				throw new BadConfigFormatException("Out of bounds exception: Bad Config in setup file");
 			}else {
 				entry.getValue().updateHand(deck.get(counter));
+				cardColors.put(deck.get(counter), entry.getValue().getColor());
 				entry.getValue().updateHand(deck.get(counter+1));
+				cardColors.put(deck.get(counter), entry.getValue().getColor());
 				entry.getValue().updateHand(deck.get(counter+2));
+				cardColors.put(deck.get(counter), entry.getValue().getColor());
 			}
 			counter+=3;
 		}
@@ -443,6 +448,10 @@ public class Board {
 		}
 	}
 
+	
+	public Map<Card, Color> getCardColors(){
+		return cardColors;
+	}
 
 	public ArrayList<Card> getDeck(){
 		return deck;

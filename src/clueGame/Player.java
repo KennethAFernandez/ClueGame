@@ -1,10 +1,11 @@
 package clueGame;
 
 import java.awt.Color;
+
 import java.util.Random;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.HashSet;
+
 
 public abstract class Player {
 
@@ -119,7 +120,6 @@ public abstract class Player {
 	public abstract Card getSuggWeapon();
 	public abstract String getSuggRoom();
 	public abstract BoardCell selectTargets(Set<BoardCell> set);
-
 	public void createSuggestion(BoardCell boardCell) {}
 
 }
