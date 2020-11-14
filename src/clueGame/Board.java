@@ -452,7 +452,9 @@ public class Board extends JPanel{
 		}
 	}
 
-	
+	// paint componenet that itertates through each cell and draws it
+	// and depending on the type of cell the draw cell method will act accordingly
+	// then iterates through and adds the player with the proper location
 	public void paintComponent(Graphics boardView) {
 		super.paintComponent(boardView);
 		int xOffset, yOffset;

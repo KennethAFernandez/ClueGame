@@ -127,6 +127,10 @@ public class BoardCell {
 		return isUnused;
 	}
 	
+	
+	// draw cell method to determine what to draw according to the type of cell
+	// whether that be a walkway, room, doorway, or unused. 
+	// then proceeds to draw the room label afterwards to avoid any overlap. 
 	public void drawCell(Graphics boardView,  int width,  int height, int xOffset, int yOffset, Board board) {
 		if(this.isWalkway()) {
 			boardView.setColor(Color.BLACK);
