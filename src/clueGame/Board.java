@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -12,10 +13,13 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
-@SuppressWarnings("unused")
+import javax.swing.JPanel;
 
-public class Board {
+@SuppressWarnings({ "unused", "serial" })
+
+public class Board extends JPanel{
 
 	// Integers to hold the initial setup values
 	private int numRows;
@@ -70,13 +74,13 @@ public class Board {
 			loadLayoutConfig();
 			adjacencies();
 			deal();
+			//paintComponent(getGraphics());
 		} catch (BadConfigFormatException e) {
 			System.out.println(e.getMessage());
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
 	}
-
 
 	//Checking an accusation, return true if accusation matches solution
 	// I cut the if statement condidtional in pieces so it was easier to read and you didn't 
@@ -448,6 +452,29 @@ public class Board {
 		}
 	}
 
+	
+	public void paintComponent(Graphics boardView) {
+		super.paintComponent(boardView);
+		int xOffset, yOffset;
+		int width = this.getWidth()/getNumColumns();
+		int height = this.getHeight()/getNumRows();
+		
+		for(int heightIter = 0; heightIter < getNumRows(); heightIter++) {
+			for(int widthIter = 0; widthIter < getNumColumns(); widthIter++) {
+				xOffset = widthIter * width;
+				yOffset = heightIter * height;
+				getCell(heightIter, widthIter).drawCell(boardView, width, height, xOffset, yOffset, this);
+			}
+		}
+		for(Entry<String, Player> playerIter: players.entrySet()) {
+			BoardCell playerLoc = playerIter.getValue().getLocation();
+			xOffset = width * playerLoc.getRow();
+			yOffset = height * playerLoc.getColumn();
+			boardView.setColor(playerIter.getValue().getColor());
+			boardView.fillOval(xOffset, yOffset, width - 1, height - 1);
+		}
+	}
+	
 	
 	public Map<Card, Color> getCardColors(){
 		return cardColors;
