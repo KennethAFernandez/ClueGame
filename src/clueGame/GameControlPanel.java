@@ -2,8 +2,12 @@ package clueGame;
 
 import java.awt.BorderLayout;
 
+
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,21 +19,26 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
-public class GameControlPanel extends JPanel {
+public class GameControlPanel extends JPanel{
 	
 	// strings to hold value names
 	String theGuess, guessResult, turnName;
 	// various variables to hold textfields and buttons
 	private JButton next, accuse;
 	private JTextField guess, result, turn, roll;
+	
 	int rollNum;
+	int counter = 0;
+	
 	Player player;
 	Color color;
 	
 	private static Board board;
 
+	
 	// sets various panels and adds them to the main panel
 	public GameControlPanel() {
+		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(2, 0));
 		
@@ -75,6 +84,7 @@ public class GameControlPanel extends JPanel {
 		panel.add(rollPanel, BorderLayout.WEST);
 		panel.setBorder(new TitledBorder (new EtchedBorder()));
 		panel.setBackground(Color.LIGHT_GRAY);
+		
 		return panel;
 	}
 	
@@ -87,12 +97,28 @@ public class GameControlPanel extends JPanel {
 		
 		accuse = new JButton("Make Accusation");
 		next = new JButton("NEXT!");
-		
+		next.addActionListener(new ButtonListener());
 		panel.add(accuse);
 		panel.add(next);
+		
 		panel.setBorder(new TitledBorder (new EtchedBorder()));
 		panel.setBackground(Color.LIGHT_GRAY);
+		
 		return panel;		
+	}
+	
+	class ButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			if(counter == 6) {
+				counter = 0;
+			}
+			player = board.players.get(board.gameCharacters.get(counter).getCardName());
+			turn.setText(player.getName());
+			turn.setBackground(player.getColor());
+			rollNum = (int) (Math.random() * 6) + 1;
+			roll.setText(String.valueOf(rollNum));
+			counter++;
+		}
 	}
 	
 	// creates the needed panels and labels, and passes an instance variable
@@ -128,6 +154,7 @@ public class GameControlPanel extends JPanel {
 		return panel;
 	}
 	
+	
 	// update display function that updates the text boxes
 	public void updateDisplay() {
 		guess.setText(getGuess());
@@ -146,7 +173,7 @@ public class GameControlPanel extends JPanel {
 		this.guessResult = string;
 	}
 	
-	private void setTurn(ComputerPlayer computerPlayer, int i) {
+	void setTurn(Player computerPlayer, int i) {
 		this.player = computerPlayer;
 		this.turnName = computerPlayer.getName();
 		this.rollNum = i;
@@ -165,8 +192,6 @@ public class GameControlPanel extends JPanel {
 	}
 	
 
-
-
 	public static void main(String[] args) {
 		board = Board.getInstance();
 		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");
@@ -184,5 +209,4 @@ public class GameControlPanel extends JPanel {
 		panel.setGuessResult( "So you have nothing?");
 		panel.updateDisplay();
 	}
-
 }
