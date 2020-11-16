@@ -22,8 +22,8 @@ public class GameControlPanel extends JPanel {
 	// various variables to hold textfields and buttons
 	private JButton next, accuse;
 	private JTextField guess, result, turn, roll;
-	Player player;
 	int rollNum;
+	Player player;
 	Color color;
 	
 	private static Board board;
