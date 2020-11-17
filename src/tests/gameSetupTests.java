@@ -75,7 +75,7 @@ public class gameSetupTests {
 	@Test
 	public void testPlayerColors() {
 		Map<String, Player> players = board.getPlayers();
-		Assert.assertEquals(Color.YELLOW, players.get("Mustard").getColor());
+		Assert.assertEquals(Color.MAGENTA, players.get("Mustard").getColor());
 		Assert.assertEquals(Color.RED, players.get("Scarlet").getColor());
 		Assert.assertEquals(Color.GREEN, players.get("Green").getColor());
 		Assert.assertEquals(Color.BLUE, players.get("Peacock").getColor());
@@ -111,7 +111,7 @@ public class gameSetupTests {
 		Assert.assertEquals(board.getCell(6, 15), players.get("Scarlet").getLocation()); 
 		Assert.assertEquals(board.getCell(15, 15), players.get("Green").getLocation()); 
 		Assert.assertEquals(board.getCell(15, 8), players.get("Peacock").getLocation()); 
-		Assert.assertEquals(board.getCell(11, 9), players.get("White").getLocation()); 
+		Assert.assertEquals(board.getCell(15, 9), players.get("White").getLocation()); 
 		Assert.assertEquals(board.getCell(11, 14), players.get("Plum").getLocation()); 
 	}
 	

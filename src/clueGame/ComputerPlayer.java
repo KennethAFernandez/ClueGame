@@ -97,9 +97,10 @@ public class ComputerPlayer extends Player{
 		}
 		Random rngen = new Random();
 		int randTarget = rngen.nextInt(targets.size());
+		Board.getInstance().getCell(this.getRow(), this.getColumn()).setOccupied(false);
 		BoardCell[] targetArray = targets.toArray(new BoardCell[targets.size()]); // since sets are not indexed, it must be converted into array, which adds linear complexity.
+		targetArray[randTarget].setOccupied(true);
 		return targetArray[randTarget];
-		
 	}
 
 	// getters and Setters for Suggesetions

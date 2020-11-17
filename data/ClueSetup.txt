@@ -16,7 +16,7 @@ Player, Mustard, Yellow, 6, 5
 Player, Scarlet, Red, 6, 15
 Player, Green, Green, 15, 15
 Player, Peacock, Blue, 15, 8
-Player, White, White, 11, 9
+Player, White, White, 15, 9
 Player, Plum, Black, 11, 14
 // Weapons
 Weapon, knife

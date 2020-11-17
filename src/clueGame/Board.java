@@ -2,6 +2,9 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -15,6 +18,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings({ "unused", "serial" })
@@ -55,16 +60,19 @@ public class Board extends JPanel{
 	// sets to hold targets, and vistited cells
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
-	
-	Player HumanPlayer;
 
+	Player HumanPlayer;
+	boolean humanPlayerTurn = true;
 
 	// singleton method
 	private static Board theInstance = new Board();
-	private Board() {super();}
+	private Board() {
+		super();
+		addMouseListener(new mouseListener());
+	}
 	public static Board getInstance() {return theInstance;}
 
-	
+
 	// function to try and run the config files
 	// try/catch for file not found exceptions, or bad format exceptions
 	public void initialize() {
@@ -182,6 +190,9 @@ public class Board extends JPanel{
 	public void calcTargets(BoardCell startCell, int path) {
 		targets = new HashSet<BoardCell>();
 		visited = new HashSet<BoardCell>();
+		if(path == 0) {
+			return;
+		}
 		visited.add(startCell);
 		findTargets(startCell, path);
 	}
@@ -290,7 +301,7 @@ public class Board extends JPanel{
 			if(name.equals("Player")) {		
 				switch(values[2]) {
 				case "Yellow":
-					color = Color.YELLOW;
+					color = Color.MAGENTA;
 					break;
 				case "Red":
 					color = Color.RED;
@@ -460,7 +471,6 @@ public class Board extends JPanel{
 		int xOffset, yOffset;
 		int width = this.getWidth()/getNumColumns();
 		int height = this.getHeight()/getNumRows();
-		
 		for(int heightIter = 0; heightIter < getNumRows(); heightIter++) {
 			for(int widthIter = 0; widthIter < getNumColumns(); widthIter++) {
 				xOffset = widthIter * width;
@@ -468,16 +478,64 @@ public class Board extends JPanel{
 				getCell(heightIter, widthIter).drawCell(boardView, width, height, xOffset, yOffset, this);
 			}
 		}
+		Board.getInstance().repaint();
 		for(Entry<String, Player> playerIter: players.entrySet()) {
 			BoardCell playerLoc = playerIter.getValue().getLocation();
-			xOffset = width * playerLoc.getRow();
-			yOffset = height * playerLoc.getColumn();
+			xOffset = width * playerLoc.getColumn();
+			yOffset = height * playerLoc.getRow();
 			boardView.setColor(playerIter.getValue().getColor());
-			boardView.fillOval(xOffset, yOffset, width - 1, height - 1);
+			boardView.fillOval(xOffset, yOffset, width, height);
+			boardView.setColor(Color.BLACK);
+			boardView.drawOval(xOffset, yOffset, width, height);
+			playerLoc.setOccupied(true);
 		}
 	}
-	
-	
+
+	// determines if the board was clicked as well as if it is valid
+	// if not returns a dialouge box with the error.
+	public class mouseListener implements MouseListener{
+
+		int counter = 0;
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			int column = (int) e.getX()/(getWidth()/getNumColumns());
+			int row = (int) e.getY()/ (getHeight()/getNumRows());
+			BoardCell clickedCell = getCell(row, column);
+			if(targets.contains(clickedCell) && humanPlayerTurn && !clickedCell.isOccupied()) {
+				grid[HumanPlayer.getRow()][HumanPlayer.getColumn()].setOccupied(false);
+				HumanPlayer.setLocation(clickedCell);
+				grid[row][column].setOccupied(true);
+				humanPlayerTurn = false;
+				counter++;
+				return;
+			} else if(humanPlayerTurn == false) {
+				JButton ok = new JButton();
+				JOptionPane.showMessageDialog(ok, "Error: Not your turn!");
+			} else {
+				JButton ok = new JButton();
+				JOptionPane.showMessageDialog(ok, "Error in-valid move");
+			}				
+		}
+
+
+
+		public void mousePressed(MouseEvent e) {
+		}
+
+		public void mouseReleased(MouseEvent e) {
+		}
+
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		public void mouseExited(MouseEvent e) {
+		}
+
+	}
+
+
+
 	public Map<Card, Color> getCardColors(){
 		return cardColors;
 	}
@@ -491,7 +549,7 @@ public class Board extends JPanel{
 	public Map<String, Player> getPlayers(){
 		return players;
 	}
-	
+
 	public void setPlayers(Map<String, Player> input) {
 		players = input;
 	}

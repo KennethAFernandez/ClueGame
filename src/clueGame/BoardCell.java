@@ -168,6 +168,10 @@ public class BoardCell {
 			boardView.setColor(Color.BLUE);
 			boardView.drawString(board.getRoom(this.getInitial()).getName(), xOffset, yOffset);
 		}
+		if(board.getTargets().contains(this) && board.humanPlayerTurn) {
+			boardView.setColor(Color.DARK_GRAY);
+			boardView.fillRect(xOffset, yOffset, width, height);
+		}
 	}
 
 	
