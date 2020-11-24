@@ -19,8 +19,11 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 @SuppressWarnings({ "unused", "serial" })
 
@@ -48,6 +51,7 @@ public class Board extends JPanel{
 	Map<Character, BoardCell> centerMap;
 	Map<String, Player> players;
 	Map<Card, Color> cardColors;
+	Map<Character, Card> roomNames;
 
 	// Array lists to hold all objects of card types
 	ArrayList<Card> deck;
@@ -263,6 +267,7 @@ public class Board extends JPanel{
 		players = new HashMap<String, Player>();
 		weapons = new ArrayList<Card>();
 		rooms = new ArrayList<Card>();
+		roomNames = new HashMap<Character, Card>();
 		gameCharacters = new ArrayList<Card>();
 		FileReader reader = new FileReader(setupConfigFile);
 		@SuppressWarnings("resource")
@@ -291,6 +296,7 @@ public class Board extends JPanel{
 					newCard = new Card(values[1], CardType.ROOM);
 					deck.add(newCard);
 					rooms.add(newCard);
+					roomNames.put(key, newCard);
 				}
 			}
 
@@ -493,7 +499,7 @@ public class Board extends JPanel{
 
 	// determines if the board was clicked as well as if it is valid
 	// if not returns a dialouge box with the error.
-	public class mouseListener implements MouseListener{
+	public class mouseListener implements MouseListener {
 
 		int counter = 0;
 		@Override
@@ -502,7 +508,7 @@ public class Board extends JPanel{
 			int column = (int) e.getX()/(getWidth()/getNumColumns());
 			int row = (int) e.getY()/ (getHeight()/getNumRows());
 			BoardCell clickedCell = getCell(row, column);
-			if(targets.contains(clickedCell) && humanPlayerTurn && !clickedCell.isOccupied()) {
+			if(targets.contains(clickedCell) && humanPlayerTurn && (!clickedCell.isOccupied() || clickedCell.isRoom())) {
 				grid[HumanPlayer.getRow()][HumanPlayer.getColumn()].setOccupied(false);
 				HumanPlayer.setLocation(clickedCell);
 				grid[row][column].setOccupied(true);
@@ -517,7 +523,7 @@ public class Board extends JPanel{
 				JOptionPane.showMessageDialog(ok, "Error in-valid move");
 			}				
 		}
-
+		
 
 
 		public void mousePressed(MouseEvent e) {
@@ -531,7 +537,6 @@ public class Board extends JPanel{
 
 		public void mouseExited(MouseEvent e) {
 		}
-
 	}
 
 
@@ -591,6 +596,10 @@ public class Board extends JPanel{
 	// returns the amount of rooms
 	public int getAmountRooms() {
 		return roomMap.size();
+	}
+	
+	public Card getCardFromRoomInitial(Character c) {
+		return roomNames.get(c);
 	}
 
 	// returns a adjacency list for any given cell

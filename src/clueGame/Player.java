@@ -114,8 +114,6 @@ public abstract class Player {
 		this.name = name;
 	}
 	
-
-	
 	public abstract Card getSuggPerson();
 	public abstract Card getSuggWeapon();
 	public abstract String getSuggRoom();

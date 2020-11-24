@@ -90,17 +90,26 @@ public class ComputerPlayer extends Player{
 	// Computer player selcts a move target 
 	@Override
 	public BoardCell selectTargets(Set<BoardCell> targets) {
+		this.getLocation().setOccupied(false);
 		for(BoardCell targetCheck: targets) {
-			if(targetCheck.isRoom() && !getSeen().toString().contains(Board.getInstance().getRoom(targetCheck.getInitial()).getName())) {
+			if(targetCheck.isRoom() && !getSeen().contains(Board.getInstance().getCardFromRoomInitial(targetCheck.getInitial()))) {
+				for(Card c: Board.getInstance().rooms) {
+					if(c.getCardName() == Board.getInstance().getRoom(targetCheck.getInitial()).getName()) {
+						this.updateSeen(c);
+						break;
+					}
+				}
 				return targetCheck;
 			}
 		}
-		Random rngen = new Random();
-		int randTarget = rngen.nextInt(targets.size());
-		Board.getInstance().getCell(this.getRow(), this.getColumn()).setOccupied(false);
-		BoardCell[] targetArray = targets.toArray(new BoardCell[targets.size()]); // since sets are not indexed, it must be converted into array, which adds linear complexity.
-		targetArray[randTarget].setOccupied(true);
-		return targetArray[randTarget];
+		int idx = new Random().nextInt(targets.size());
+		for(BoardCell findTarget: targets) {
+			if(idx-- == 0) {
+				findTarget.setOccupied(true);
+				return findTarget;
+			}
+		}
+		return null;
 	}
 
 	// getters and Setters for Suggesetions
