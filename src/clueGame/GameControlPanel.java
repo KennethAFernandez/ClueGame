@@ -2,6 +2,7 @@ package clueGame;
 
 import java.awt.BorderLayout;
 
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,9 +10,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -58,6 +57,10 @@ public class GameControlPanel extends JPanel {
 		add(mainPanel);
 		board = gameBoard;
 	}
+	
+	public void suggestionPanel() {
+		
+	}
 
 	// creates the needed panels and labels, and passes an instance variable
 	// through for updating purposes. then adds everything to the panel.
@@ -100,6 +103,7 @@ public class GameControlPanel extends JPanel {
 		accuse = new JButton("Make Accusation");
 		next = new JButton("NEXT!");
 		next.addActionListener(new ButtonListener());
+		accuse.addActionListener(new accusationListener());
 		panel.add(accuse);
 		panel.add(next);
 
@@ -134,6 +138,16 @@ public class GameControlPanel extends JPanel {
 			rollTheDice(false);
 		}
 
+	}
+	
+	class accusationListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			AccusationPanel panel = new AccusationPanel();
+			panel.setVisible(true);
+		}
+		
 	}
 
 	// creates the needed panels and labels, and passes an instance variable
@@ -194,10 +208,12 @@ public class GameControlPanel extends JPanel {
 	}
 
 	// setters and getters
+	@SuppressWarnings("unused")
 	private void setGuess(String string) {
 		this.theGuess = string;
 	}
 
+	@SuppressWarnings("unused")
 	private void setGuessResult(String string) {
 		this.guessResult = string;
 	}
@@ -227,22 +243,4 @@ public class GameControlPanel extends JPanel {
 	public Player getPlayer() {
 		return player;
 	}
-
-	//	public static void main(String[] args) {
-	//		board = Board.getInstance();
-	//		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");
-	//		board.initialize();
-	//		GameControlPanel panel = new GameControlPanel(board); // create the panel
-	//		JFrame frame = new JFrame(); // create the frame
-	//		frame.setContentPane(panel); // put the panel in the frame
-	//		frame.setSize(750, 180); // size the frame
-	//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close
-	//		frame.setVisible(true); // make it visible
-	//		// test filling in the data
-	//
-	//		panel.setTurn(new ComputerPlayer("Col. Mustard", Color.ORANGE, 6, 5), 5);
-	//		panel.setGuess("I have no guess!");
-	//		panel.setGuessResult("So you have nothing?");
-	//		panel.updateDisplay();
-	//	}
 }

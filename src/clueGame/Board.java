@@ -502,6 +502,7 @@ public class Board extends JPanel{
 	public class mouseListener implements MouseListener {
 
 		int counter = 0;
+		
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			
@@ -514,6 +515,10 @@ public class Board extends JPanel{
 				grid[row][column].setOccupied(true);
 				humanPlayerTurn = false;
 				counter++;
+				if(clickedCell.isRoom()) {
+					SuggestionPanel panel = new SuggestionPanel();
+					panel.setVisible(true);
+				}
 				return;
 			} else if(humanPlayerTurn == false) {
 				JButton ok = new JButton();
