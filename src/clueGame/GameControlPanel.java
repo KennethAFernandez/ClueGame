@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -23,7 +24,7 @@ public class GameControlPanel extends JPanel {
 	String theGuess, guessResult, turnName;
 	// various variables to hold textfields and buttons
 	private JButton next, accuse;
-	private JTextField guess, result, turn, roll;
+	public JTextField guess, result, turn, roll;
 
 	int rollNum;
 	int counter = 0;
@@ -57,10 +58,8 @@ public class GameControlPanel extends JPanel {
 		add(mainPanel);
 		board = gameBoard;
 	}
-	
-	public void suggestionPanel() {
-		
-	}
+
+
 
 	// creates the needed panels and labels, and passes an instance variable
 	// through for updating purposes. then adds everything to the panel.
@@ -118,36 +117,52 @@ public class GameControlPanel extends JPanel {
 	class ButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			
-			if(player.getName() == board.HumanPlayer.getName()) {
-				board.humanPlayerTurn = true;
-			} 
-			
+
+			guess.setText("");
+			result.setText("");
+
+			if(board.humanPlayerTurn == true && board.hasMoved == false) {
+				JButton ok = new JButton();
+				JOptionPane.showMessageDialog(ok, "Player has not finished turn");
+				return;
+			}
+
+
 			counter = counter % 6;
 			player = board.players.get(board.gameCharacters.get(counter).getCardName());
+			
 			if(counter != 5 && player == board.players.get(Board.getInstance().HumanPlayer.getName())) {
 				player = board.players.get(board.gameCharacters.get(5).getCardName());
 			}
 			if(counter == 5 && player != board.players.get(Board.getInstance().HumanPlayer.getName())) {
 				player = board.players.get(Board.getInstance().HumanPlayer.getName());
 			}
+			
+			if(player.getName() == board.HumanPlayer.getName()) {
+				board.humanPlayerTurn = true;
+				board.hasMoved = false;
+			} 
+			
 			turn.setText(player.getName());
 			turn.setBackground(player.getColor());
 			counter++;
 
 			rollTheDice(false);
 		}
-
 	}
-	
-	class accusationListener implements ActionListener{
 
+	class accusationListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AccusationPanel panel = new AccusationPanel();
-			panel.setVisible(true);
+			if(board.humanPlayerTurn == true && board.hasMoved == false) {
+				AccusationPanel panel = new AccusationPanel();
+				panel.setVisible(true);
+				board.humanPlayerTurn = false;
+			} else if (board.humanPlayerTurn == false) {
+				JButton ok = new JButton();
+				JOptionPane.showMessageDialog(ok, "Error: Not your turn!");
+			} 
 		}
-		
 	}
 
 	// creates the needed panels and labels, and passes an instance variable
@@ -200,21 +215,22 @@ public class GameControlPanel extends JPanel {
 
 	// update display function that updates the text boxes
 	public void updateDisplay() {
-		guess.setText(getGuess());
-		result.setText(getResult());
-		turn.setText(turnName);
-		turn.setBackground(color);
-		roll.setText(Integer.toString(rollNum));
+		guess.setText(theGuess);
+		result.setText(guessResult);
+		if(firstIter == true) {
+			turn.setText(turnName);
+			turn.setBackground(color);
+			roll.setText(Integer.toString(rollNum));
+			firstIter = false;
+		}
 	}
 
 	// setters and getters
-	@SuppressWarnings("unused")
-	private void setGuess(String string) {
+	public void setGuess(String string) {
 		this.theGuess = string;
 	}
 
-	@SuppressWarnings("unused")
-	private void setGuessResult(String string) {
+	public void setGuessResult(String string) {
 		this.guessResult = string;
 	}
 

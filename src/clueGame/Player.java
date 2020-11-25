@@ -42,7 +42,9 @@ public abstract class Player {
 		Random num = new Random();
 		if(disproveCards.size() > 0) {
 			int index = num.nextInt(disproveCards.size());
-			return disproveCards.get(index);
+			Card cardToAdd = disproveCards.get(index);
+			seen.add(cardToAdd);
+			return cardToAdd;
 		}else {
 			return null;
 		}

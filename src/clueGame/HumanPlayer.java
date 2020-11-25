@@ -15,8 +15,6 @@ public class HumanPlayer extends Player{
 		
 	}
 	@Override
-	
-	
 	public Card getSuggPerson() {
 		return null;
 	}

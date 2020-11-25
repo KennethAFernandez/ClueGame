@@ -15,8 +15,10 @@ import javax.swing.border.TitledBorder;
 @SuppressWarnings("serial")
 public class SuggestionPanel extends JFrame{
 
+	// lists to hold the players/ weapons
 	private ArrayList<String> players;
 	private ArrayList<String> weapons;
+	// strings to hold player's choice
 	String personChoice;
 	String weaponChoice;
 	String currRoomName;
@@ -25,12 +27,15 @@ public class SuggestionPanel extends JFrame{
 	Card submitRoom;
 	JButton submit;
 	JButton cancel;
+	// combo boxes
 	@SuppressWarnings("rawtypes")
 	JComboBox personCombo;
 	@SuppressWarnings("rawtypes")
 	JComboBox weaponCombo;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	// constructor that finds the current room, creates the combo boxes and
+	// labels for the panel as a whole
 	public SuggestionPanel() {
 		
 		currRoomName = Board.getInstance().roomMap.get(Board.getInstance().HumanPlayer.getLocation().getInitial()).getName();
@@ -48,7 +53,7 @@ public class SuggestionPanel extends JFrame{
 		roomText.setBorder(new TitledBorder(new EtchedBorder()));
 		
 		
-		for(Card c: Board.getInstance().deck) {
+		for(Card c: Board.getInstance().gameDeck) {
 			if(c.getCardType() == CardType.PERSON) {
 				players.add(c.getCardName());
 			} else if (c.getCardType() == CardType.WEAPON) {
@@ -62,7 +67,7 @@ public class SuggestionPanel extends JFrame{
 		weaponCombo = new JComboBox(weapons.toArray());
 		
 		setTitle("Make a suggestion");
-		setSize(250, 250);
+		setSize(350, 250);
 		setLayout(new GridLayout(4, 2));
 		add(room);
 		add(roomText);
@@ -75,20 +80,22 @@ public class SuggestionPanel extends JFrame{
 		
 	}
 	
+	// listener for the cancel button that sets the visibility of the panel to false
 	private class cancelListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setVisible(false);
 		}
-		
 	}
+	
+	// listener for the submit button which is going to determine the player's choices
+	// and call the method handleSuggestion to determine if it can be disproved or not.
 	private class submitListener implements ActionListener{
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			personChoice = personCombo.getSelectedItem().toString();
 			weaponChoice = weaponCombo.getSelectedItem().toString();
-			for(Card c: Board.getInstance().deck) {
+			for(Card c: Board.getInstance().gameDeck) {
 				if(c.getCardName() == personChoice) {
 					submitPerson = c;
 				}
@@ -99,6 +106,7 @@ public class SuggestionPanel extends JFrame{
 					submitRoom = c;
 				}
 			}
+			
 			Board.getInstance().handleSuggestion(submitPerson, submitRoom, submitWeapon, Board.getInstance().HumanPlayer);
 			setVisible(false);
 		}

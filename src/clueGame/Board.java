@@ -17,6 +17,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -55,6 +56,7 @@ public class Board extends JPanel{
 
 	// Array lists to hold all objects of card types
 	ArrayList<Card> deck;
+	ArrayList<Card> gameDeck;
 	ArrayList<Card> weapons;
 	ArrayList<Card> rooms;
 	ArrayList<Card> gameCharacters; // for the characters in the game; not calling this "players" for clarity.
@@ -65,8 +67,14 @@ public class Board extends JPanel{
 	Set<BoardCell> targets;
 	Set<BoardCell> visited;
 
+	// gui objects for easy access in board
+	GameControlPanel controlPanel;
+	GameCardPanel cardPanel;
+
 	Player HumanPlayer;
+	// booleans to determine whether the player has finished their turn
 	boolean humanPlayerTurn = true;
+	boolean hasMoved = false;
 
 	// singleton method
 	private static Board theInstance = new Board();
@@ -75,7 +83,6 @@ public class Board extends JPanel{
 		addMouseListener(new mouseListener());
 	}
 	public static Board getInstance() {return theInstance;}
-
 
 	// function to try and run the config files
 	// try/catch for file not found exceptions, or bad format exceptions
@@ -86,12 +93,18 @@ public class Board extends JPanel{
 			loadLayoutConfig();
 			adjacencies();
 			deal();
-			//paintComponent(getGraphics());
 		} catch (BadConfigFormatException e) {
 			System.out.println(e.getMessage());
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	// setter to set variables controlPanel and cardPanel in order to 
+	// update the gui
+	public void setPanels(GameControlPanel gc, GameCardPanel gcp) {
+		this.controlPanel = gc;
+		this.cardPanel = gcp;
 	}
 
 	//Checking an accusation, return true if accusation matches solution
@@ -108,27 +121,65 @@ public class Board extends JPanel{
 	}
 
 
-	//Handle a suggestion made
+	// Handle a suggestion made by determining if a player can disprove it by returning
+	// a card they have, and if it cannot be disproved than the method returns null;
 	public Card handleSuggestion(Card person, Card room, Card weapon, Player suggestor) {
 		ArrayList<Card> suggestionList = new ArrayList<Card>();
+		ArrayList<Card> disprovedCards = new ArrayList<Card>();
+		ArrayList<Card> disprovingPlayer = new ArrayList<Card>();
 		suggestionList.add(person);
 		suggestionList.add(room);
 		suggestionList.add(weapon);
 		Card result = null;
+		Card player = null;
 		for(Map.Entry<String, Player> entry: players.entrySet()) {
 			if(entry.getValue() == suggestor) {continue;}
-			for(int suggestionIterator = 0; suggestionIterator < 3; ++suggestionIterator) {
-				for(int handIterator = 0; handIterator < 3; ++handIterator) {
-					if(entry.getValue().getHand().get(handIterator).getCardName().equals(suggestionList.get(suggestionIterator).getCardName())) {
-						result = suggestionList.get(suggestionIterator);
+			if(person.getCardName() == entry.getValue().getName()) {
+				entry.getValue().getLocation().setOccupied(false);
+				entry.getValue().setLocation(roomMap.get(room.getCardName().charAt(0)).getCenterCell());
+				Board.getInstance().repaint();	
+			}
+
+			result = entry.getValue().disproveSuggestion(suggestionList);
+			if(result != null) {
+				disprovedCards.add(result);
+				for(Card c: gameDeck) {
+					if(c.getCardName() == entry.getValue().getName()) {
+						disprovingPlayer.add(c);
 						break;
 					}
 				}
 			}
-			if(result != null) {return result;}
 		} 
+		controlPanel.setGuess("The guess is " + person.getCardName() + " in " + room.getCardName() + " with " + weapon.getCardName());
+		Board.getInstance().repaint();
+		if(disprovedCards.size() > 0 && suggestor.equals(HumanPlayer)) {
+			Random randInt = new Random();
+			int n = randInt.nextInt(disprovedCards.size());
+			result = disprovedCards.get(n);
+			player = disprovingPlayer.get(n);
+			controlPanel.setGuessResult("Suggestion Result: "+ result.getCardName() + " from " + player.getCardName());
+			this.HumanPlayer.updateSeen(result);
+			this.HumanPlayer.updateSeen(player);
+			cardPanel.updateDisplay();
+			disprovedCards.clear();
+			suggestionList.clear();
+			controlPanel.updateDisplay();
+			Board.getInstance().repaint();
+			return result;
+		} else if (disprovedCards.size() > 0){
+			result = disprovedCards.get(new Random().nextInt(disprovedCards.size()));
+			controlPanel.setGuessResult("Suggestion disproved");
+			Board.getInstance().repaint();
+			return result;
+		}
+		controlPanel.updateDisplay();
+		controlPanel.setGuessResult("no new clue");
+		Board.getInstance().repaint();
 		return null;
+
 	}
+
 
 	// calculates the adjacencies
 	// checks if walkway, then if doorway, than if it is a room center
@@ -263,6 +314,7 @@ public class Board extends JPanel{
 	// loads the given legend, creates the room map, and the cards
 	public void loadSetupConfig() throws BadConfigFormatException, FileNotFoundException {
 		deck = new ArrayList<Card>();
+		gameDeck = new ArrayList<Card>();
 		roomMap = new HashMap<Character, Room>();		
 		players = new HashMap<String, Player>();
 		weapons = new ArrayList<Card>();
@@ -295,6 +347,7 @@ public class Board extends JPanel{
 					Card newCard;
 					newCard = new Card(values[1], CardType.ROOM);
 					deck.add(newCard);
+					gameDeck.add(newCard);
 					rooms.add(newCard);
 					roomNames.put(key, newCard);
 				}
@@ -329,6 +382,7 @@ public class Board extends JPanel{
 				Card newCard;
 				newCard = new Card(values[1], CardType.PERSON);
 				deck.add(newCard);
+				gameDeck.add(newCard);
 				gameCharacters.add(newCard);
 				// creates player class (uses first "person")
 				if(firstIter == true) {
@@ -344,6 +398,7 @@ public class Board extends JPanel{
 				Card newCard;
 				newCard = new Card(values[1], CardType.WEAPON);
 				deck.add(newCard);
+				gameDeck.add(newCard);
 				weapons.add(newCard);
 			} else {
 				continue;
@@ -364,13 +419,13 @@ public class Board extends JPanel{
 		Collections.shuffle(gameCharacters);
 	}
 	public void deal() throws BadConfigFormatException {
+		shuffle(); 
 		cardColors = new HashMap<Card, Color>();
 		solution = new Solution(gameCharacters.get(0),rooms.get(0), weapons.get(0));
 		deck.remove(rooms.get(0));
 		deck.remove(weapons.get(0));
 		deck.remove(gameCharacters.get(0));
 		Collections.shuffle(deck);
-		shuffle(); 
 		int counter = 0;
 		for(Map.Entry<String, Player> entry: players.entrySet()) {	
 			if(counter > deck.size()-3) {
@@ -472,11 +527,13 @@ public class Board extends JPanel{
 	// paint componenet that itertates through each cell and draws it
 	// and depending on the type of cell the draw cell method will act accordingly
 	// then iterates through and adds the player with the proper location
+	// also allows two players to be in a room with ease by drawing one of them slightly offset
 	public void paintComponent(Graphics boardView) {
 		super.paintComponent(boardView);
 		int xOffset, yOffset;
 		int width = this.getWidth()/getNumColumns();
 		int height = this.getHeight()/getNumRows();
+		ArrayList<BoardCell> currentPlayerLocs = new ArrayList<BoardCell>();
 		for(int heightIter = 0; heightIter < getNumRows(); heightIter++) {
 			for(int widthIter = 0; widthIter < getNumColumns(); widthIter++) {
 				xOffset = widthIter * width;
@@ -489,6 +546,10 @@ public class Board extends JPanel{
 			BoardCell playerLoc = playerIter.getValue().getLocation();
 			xOffset = width * playerLoc.getColumn();
 			yOffset = height * playerLoc.getRow();
+			if(playerLoc.isRoom() && currentPlayerLocs.contains(playerLoc)) {
+				xOffset += 10 * Collections.frequency(currentPlayerLocs, playerLoc);
+			}
+			currentPlayerLocs.add(playerLoc);
 			boardView.setColor(playerIter.getValue().getColor());
 			boardView.fillOval(xOffset, yOffset, width, height);
 			boardView.setColor(Color.BLACK);
@@ -502,22 +563,23 @@ public class Board extends JPanel{
 	public class mouseListener implements MouseListener {
 
 		int counter = 0;
-		
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
+
 			int column = (int) e.getX()/(getWidth()/getNumColumns());
 			int row = (int) e.getY()/ (getHeight()/getNumRows());
 			BoardCell clickedCell = getCell(row, column);
 			if(targets.contains(clickedCell) && humanPlayerTurn && (!clickedCell.isOccupied() || clickedCell.isRoom())) {
-				grid[HumanPlayer.getRow()][HumanPlayer.getColumn()].setOccupied(false);
+				HumanPlayer.getLocation().setOccupied(false);
 				HumanPlayer.setLocation(clickedCell);
 				grid[row][column].setOccupied(true);
 				humanPlayerTurn = false;
+				hasMoved = true;
 				counter++;
 				if(clickedCell.isRoom()) {
 					SuggestionPanel panel = new SuggestionPanel();
 					panel.setVisible(true);
+					humanPlayerTurn = false;
 				}
 				return;
 			} else if(humanPlayerTurn == false) {
@@ -528,7 +590,7 @@ public class Board extends JPanel{
 				JOptionPane.showMessageDialog(ok, "Error in-valid move");
 			}				
 		}
-		
+
 
 
 		public void mousePressed(MouseEvent e) {
@@ -545,7 +607,7 @@ public class Board extends JPanel{
 	}
 
 
-
+	// getters and setters
 	public Map<Card, Color> getCardColors(){
 		return cardColors;
 	}
@@ -602,7 +664,7 @@ public class Board extends JPanel{
 	public int getAmountRooms() {
 		return roomMap.size();
 	}
-	
+
 	public Card getCardFromRoomInitial(Character c) {
 		return roomNames.get(c);
 	}

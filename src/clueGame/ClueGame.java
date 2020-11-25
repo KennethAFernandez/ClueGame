@@ -27,7 +27,10 @@ public class ClueGame extends JFrame{
 		add(cardPanel, BorderLayout.EAST);
 		showSplash();
 		nextTurn();
+		Board.getInstance().setPanels(controlPanel, cardPanel);
 	}
+	
+	
 	
 	// determines if it is the first turn to set it to the humanPlayer
 	public void nextTurn() {
